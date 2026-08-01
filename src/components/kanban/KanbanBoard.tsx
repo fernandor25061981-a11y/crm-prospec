@@ -11,7 +11,8 @@ import {
 } from "@dnd-kit/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { LeadDetailModal } from "@/components/lead-detail/LeadDetailModal";
+import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
+import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
 import { updateLeadFase } from "@/services/leads";
 import type { Lead, StatusKanban } from "@/types/database";
@@ -19,7 +20,11 @@ import { KanbanColumn } from "./KanbanColumn";
 import { LeadCardBody } from "./LeadCardBody";
 import { NotificationQueue } from "./NotificationQueue";
 
-type DetailState = { mode: "closed" } | { mode: "edit"; lead: Lead } | { mode: "create" };
+type DetailState =
+  | { mode: "closed" }
+  | { mode: "ficha"; leadId: string }
+  | { mode: "create" }
+  | { mode: "edit"; leadId: string };
 
 export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   const router = useRouter();
@@ -27,15 +32,24 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   const [leads, setLeads] = useState(initialLeads);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const wantsNew = searchParams.get("new") === "1";
   const [detail, setDetail] = useState<DetailState>(() =>
-    searchParams.get("new") === "1" ? { mode: "create" } : { mode: "closed" }
+    wantsNew ? { mode: "create" } : { mode: "closed" }
   );
+  const [handledNew, setHandledNew] = useState(wantsNew);
+
+  if (wantsNew && !handledNew) {
+    setHandledNew(true);
+    setDetail({ mode: "create" });
+  } else if (!wantsNew && handledNew) {
+    setHandledNew(false);
+  }
 
   useEffect(() => {
-    if (searchParams.get("new") === "1") {
+    if (wantsNew) {
       router.replace("/kanban");
     }
-  }, [searchParams, router]);
+  }, [wantsNew, router]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -50,16 +64,29 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
 
   const activeLead = activeId ? leads.find((l) => l.id === activeId) ?? null : null;
 
+  const detailLead =
+    detail.mode === "ficha" || detail.mode === "edit"
+      ? leads.find((l) => l.id === detail.leadId) ?? null
+      : null;
+
   function patchLead(leadId: string, patch: Partial<Lead>) {
     setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, ...patch } : l)));
   }
 
-  function openLeadDetail(lead: Lead) {
-    setDetail({ mode: "edit", lead });
+  function openFicha(lead: Lead) {
+    setDetail({ mode: "ficha", leadId: lead.id });
+  }
+
+  function openEdit(lead: Lead) {
+    setDetail({ mode: "edit", leadId: lead.id });
   }
 
   function closeLeadDetail() {
     setDetail({ mode: "closed" });
+  }
+
+  function cancelForm() {
+    setDetail((prev) => (prev.mode === "edit" ? { mode: "ficha", leadId: prev.leadId } : { mode: "closed" }));
   }
 
   function handleDragStart(event: DragStartEvent) {
@@ -123,7 +150,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
                 leads={leadsByStatus.get(status) ?? []}
                 onPatch={patchLead}
                 onError={setErrorMessage}
-                onOpen={openLeadDetail}
+                onOpen={openFicha}
               />
             ))}
           </div>
@@ -134,15 +161,27 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         </DragOverlay>
       </DndContext>
 
-      <LeadDetailModal
-        lead={detail.mode === "edit" ? detail.lead : null}
-        open={detail.mode !== "closed"}
+      <LeadFichaModal
+        lead={detail.mode === "ficha" ? detailLead : null}
+        open={detail.mode === "ficha"}
         onClose={closeLeadDetail}
+        onEdit={openEdit}
+        onPatch={patchLead}
+        onError={setErrorMessage}
+      />
+
+      <LeadFormModal
+        lead={detail.mode === "edit" ? detailLead : null}
+        open={detail.mode === "create" || detail.mode === "edit"}
+        onCancel={cancelForm}
         onCreated={(novoLead) => {
           setLeads((prev) => [novoLead, ...prev]);
           closeLeadDetail();
         }}
-        onPatched={patchLead}
+        onPatched={(leadId, patch) => {
+          patchLead(leadId, patch);
+          closeLeadDetail();
+        }}
         onError={setErrorMessage}
       />
     </div>

@@ -1,9 +1,12 @@
 "use client";
 
+import { getWhatsappUrl } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 
 export function WhatsappButton({ whatsapp }: { whatsapp: string | null }) {
-  if (!whatsapp) {
+  const url = getWhatsappUrl(whatsapp);
+
+  if (!url) {
     return (
       <span
         className="flex h-8 w-8 items-center justify-center rounded-md text-zinc-300 dark:text-zinc-700"
@@ -14,11 +17,9 @@ export function WhatsappButton({ whatsapp }: { whatsapp: string | null }) {
     );
   }
 
-  const digits = whatsapp.replace(/\D/g, "");
-
   return (
     <a
-      href={`https://wa.me/${digits}`}
+      href={url}
       target="_blank"
       rel="noopener noreferrer"
       title="Abrir WhatsApp"

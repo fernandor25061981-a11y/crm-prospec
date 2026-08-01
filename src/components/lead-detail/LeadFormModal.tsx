@@ -5,7 +5,6 @@ import { Modal } from "@/components/ui/Modal";
 import { fromDatetimeLocalValue, toDatetimeLocalValue } from "@/lib/datetime";
 import { createLead, updateLead } from "@/services/leads";
 import type { Lead, LeadInsert, LeadUpdate } from "@/types/database";
-import { HistoricoPanel } from "./HistoricoPanel";
 import { LeadFormPanel } from "./LeadFormPanel";
 import type { LeadFormState } from "./types";
 
@@ -63,17 +62,17 @@ function formToPayload(form: LeadFormState) {
   };
 }
 
-export function LeadDetailModal({
+export function LeadFormModal({
   lead,
   open,
-  onClose,
+  onCancel,
   onCreated,
   onPatched,
   onError,
 }: {
   lead: Lead | null;
   open: boolean;
-  onClose: () => void;
+  onCancel: () => void;
   onCreated: (lead: Lead) => void;
   onPatched: (leadId: string, patch: Partial<Lead>) => void;
   onError: (message: string) => void;
@@ -122,30 +121,16 @@ export function LeadDetailModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} widthClassName="max-w-6xl">
+    <Modal open={open} onClose={onCancel} widthClassName="max-w-3xl">
       <form onSubmit={handleSubmit} className="flex flex-col">
-        <h2 className="mb-4 text-lg font-semibold">
-          {lead ? "Ficha do Cliente" : "Novo Lead"}
-        </h2>
+        <h2 className="mb-4 text-lg font-semibold">{lead ? "Editar Lead" : "Novo Lead"}</h2>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
-          <LeadFormPanel form={form} onChange={handleChange} />
-
-          <div className="border-t border-black/[.08] pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0 dark:border-white/[.145]">
-            {lead ? (
-              <HistoricoPanel leadId={lead.id} onError={onError} />
-            ) : (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Salve o lead para ver o histórico.
-              </p>
-            )}
-          </div>
-        </div>
+        <LeadFormPanel form={form} onChange={handleChange} />
 
         <div className="mt-6 flex justify-end gap-2 border-t border-black/[.08] pt-4 dark:border-white/[.145]">
           <button
             type="button"
-            onClick={onClose}
+            onClick={onCancel}
             className="rounded-md px-3 py-1.5 text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06]"
           >
             Cancelar

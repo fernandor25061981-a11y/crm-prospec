@@ -1,13 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { LeadDetailModal } from "@/components/lead-detail/LeadDetailModal";
+import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
+import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
 import { dateKey, dateKeyFromIso, isSameDay } from "@/lib/agenda";
 import type { Lead } from "@/types/database";
 import { AppointmentsPanel } from "./AppointmentsPanel";
 import { MonthCalendar } from "./MonthCalendar";
 
-type DetailState = { mode: "closed" } | { mode: "edit"; lead: Lead };
+type DetailState =
+  | { mode: "closed" }
+  | { mode: "ficha"; leadId: string }
+  | { mode: "edit"; leadId: string };
 
 function sortByHorario(leads: Lead[]): Lead[] {
   return [...leads].sort((a, b) => {
@@ -45,16 +49,29 @@ export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
   const selectedDateLeads = leadsByDate.get(dateKey(selectedDate)) ?? [];
   const selectedIsToday = isSameDay(selectedDate, today);
 
+  const detailLead =
+    detail.mode === "ficha" || detail.mode === "edit"
+      ? leads.find((l) => l.id === detail.leadId) ?? null
+      : null;
+
   function patchLead(leadId: string, patch: Partial<Lead>) {
     setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, ...patch } : l)));
   }
 
-  function openLeadDetail(lead: Lead) {
-    setDetail({ mode: "edit", lead });
+  function openFicha(lead: Lead) {
+    setDetail({ mode: "ficha", leadId: lead.id });
+  }
+
+  function openEdit(lead: Lead) {
+    setDetail({ mode: "edit", leadId: lead.id });
   }
 
   function closeLeadDetail() {
     setDetail({ mode: "closed" });
+  }
+
+  function cancelForm() {
+    setDetail((prev) => (prev.mode === "edit" ? { mode: "ficha", leadId: prev.leadId } : { mode: "closed" }));
   }
 
   return (
@@ -87,7 +104,7 @@ export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
               title="Compromissos do Dia"
               subtitle={new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(today)}
               leads={todayLeads}
-              onOpenLead={openLeadDetail}
+              onOpenLead={openFicha}
               emptyMessage="Nenhum compromisso agendado para hoje."
             />
 
@@ -98,19 +115,31 @@ export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
                   selectedDate
                 )}
                 leads={selectedDateLeads}
-                onOpenLead={openLeadDetail}
+                onOpenLead={openFicha}
               />
             )}
           </div>
         </div>
       </div>
 
-      <LeadDetailModal
-        lead={detail.mode === "edit" ? detail.lead : null}
-        open={detail.mode !== "closed"}
+      <LeadFichaModal
+        lead={detail.mode === "ficha" ? detailLead : null}
+        open={detail.mode === "ficha"}
         onClose={closeLeadDetail}
+        onEdit={openEdit}
+        onPatch={patchLead}
+        onError={setErrorMessage}
+      />
+
+      <LeadFormModal
+        lead={detail.mode === "edit" ? detailLead : null}
+        open={detail.mode === "edit"}
+        onCancel={cancelForm}
         onCreated={() => closeLeadDetail()}
-        onPatched={patchLead}
+        onPatched={(leadId, patch) => {
+          patchLead(leadId, patch);
+          closeLeadDetail();
+        }}
         onError={setErrorMessage}
       />
     </div>

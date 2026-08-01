@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { KanbanBoard } from "@/components/kanban/KanbanBoard";
 import { getLeads } from "@/services/leads";
 
+export const dynamic = "force-dynamic";
+
 export default async function KanbanPage() {
   const leads = await getLeads();
 
