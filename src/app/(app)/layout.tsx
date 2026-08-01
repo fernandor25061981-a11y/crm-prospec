@@ -10,6 +10,8 @@ export default function AppLayout({ children }: Readonly<{ children: React.React
   return (
     <div className="min-h-full flex">
       <aside className="w-32 shrink-0 border-r border-black/[.08] dark:border-white/[.145] flex flex-col gap-1 p-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/preguica.gif" alt="" className="w-full rounded-md" />
         <Link
           href="/kanban?new=1"
           className="rounded-md bg-zinc-900 px-2 py-1.5 text-center text-sm text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
