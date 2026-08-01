@@ -1,0 +1,118 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { LeadDetailModal } from "@/components/lead-detail/LeadDetailModal";
+import { dateKey, dateKeyFromIso, isSameDay } from "@/lib/agenda";
+import type { Lead } from "@/types/database";
+import { AppointmentsPanel } from "./AppointmentsPanel";
+import { MonthCalendar } from "./MonthCalendar";
+
+type DetailState = { mode: "closed" } | { mode: "edit"; lead: Lead };
+
+function sortByHorario(leads: Lead[]): Lead[] {
+  return [...leads].sort((a, b) => {
+    const ta = a.proximo_contato ? new Date(a.proximo_contato).getTime() : Infinity;
+    const tb = b.proximo_contato ? new Date(b.proximo_contato).getTime() : Infinity;
+    return ta - tb;
+  });
+}
+
+export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
+  const [leads, setLeads] = useState(initialLeads);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [detail, setDetail] = useState<DetailState>({ mode: "closed" });
+
+  const today = useMemo(() => new Date(), []);
+  const [currentMonth, setCurrentMonth] = useState(
+    () => new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [selectedDate, setSelectedDate] = useState(today);
+
+  const leadsByDate = useMemo(() => {
+    const map = new Map<string, Lead[]>();
+    for (const lead of leads) {
+      if (!lead.proximo_contato) continue;
+      const key = dateKeyFromIso(lead.proximo_contato);
+      const bucket = map.get(key) ?? [];
+      bucket.push(lead);
+      map.set(key, bucket);
+    }
+    for (const [key, bucket] of map) map.set(key, sortByHorario(bucket));
+    return map;
+  }, [leads]);
+
+  const todayLeads = leadsByDate.get(dateKey(today)) ?? [];
+  const selectedDateLeads = leadsByDate.get(dateKey(selectedDate)) ?? [];
+  const selectedIsToday = isSameDay(selectedDate, today);
+
+  function patchLead(leadId: string, patch: Partial<Lead>) {
+    setLeads((prev) => prev.map((l) => (l.id === leadId ? { ...l, ...patch } : l)));
+  }
+
+  function openLeadDetail(lead: Lead) {
+    setDetail({ mode: "edit", lead });
+  }
+
+  function closeLeadDetail() {
+    setDetail({ mode: "closed" });
+  }
+
+  return (
+    <div className="flex h-dvh flex-col">
+      {errorMessage && (
+        <div className="flex items-center justify-between border-b border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+          {errorMessage}
+          <button
+            type="button"
+            onClick={() => setErrorMessage(null)}
+            className="ml-4 text-xs underline"
+          >
+            Fechar
+          </button>
+        </div>
+      )}
+
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+          <MonthCalendar
+            currentMonth={currentMonth}
+            onMonthChange={setCurrentMonth}
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            leadsByDate={leadsByDate}
+          />
+
+          <div className="flex flex-col gap-6">
+            <AppointmentsPanel
+              title="Compromissos do Dia"
+              subtitle={new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(today)}
+              leads={todayLeads}
+              onOpenLead={openLeadDetail}
+              emptyMessage="Nenhum compromisso agendado para hoje."
+            />
+
+            {!selectedIsToday && (
+              <AppointmentsPanel
+                title="Compromissos do Dia Selecionado"
+                subtitle={new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(
+                  selectedDate
+                )}
+                leads={selectedDateLeads}
+                onOpenLead={openLeadDetail}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      <LeadDetailModal
+        lead={detail.mode === "edit" ? detail.lead : null}
+        open={detail.mode !== "closed"}
+        onClose={closeLeadDetail}
+        onCreated={() => closeLeadDetail()}
+        onPatched={patchLead}
+        onError={setErrorMessage}
+      />
+    </div>
+  );
+}
