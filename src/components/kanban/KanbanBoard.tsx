@@ -33,6 +33,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
 
   useEffect(() => {
     if (searchParams.get("new") === "1") {
+      setDetail({ mode: "create" });
       router.replace("/kanban");
     }
   }, [searchParams, router]);
