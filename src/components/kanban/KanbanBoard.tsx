@@ -11,6 +11,7 @@ import {
 } from "@dnd-kit/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { CsvModal } from "@/components/csv/CsvModal";
 import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
 import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
 import { useOverdueLeads } from "@/hooks/useOverdueLeads";
@@ -36,10 +37,13 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [ultimasInteracoes, setUltimasInteracoes] = useState<Map<string, string>>(new Map());
   const wantsNew = searchParams.get("new") === "1";
+  const wantsCsv = searchParams.get("csv") === "1";
   const [detail, setDetail] = useState<DetailState>(() =>
     wantsNew ? { mode: "create" } : { mode: "closed" }
   );
   const [handledNew, setHandledNew] = useState(wantsNew);
+  const [csvOpen, setCsvOpen] = useState(wantsCsv);
+  const [handledCsv, setHandledCsv] = useState(wantsCsv);
 
   if (wantsNew && !handledNew) {
     setHandledNew(true);
@@ -48,11 +52,18 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
     setHandledNew(false);
   }
 
+  if (wantsCsv && !handledCsv) {
+    setHandledCsv(true);
+    setCsvOpen(true);
+  } else if (!wantsCsv && handledCsv) {
+    setHandledCsv(false);
+  }
+
   useEffect(() => {
-    if (wantsNew) {
+    if (wantsNew || wantsCsv) {
       router.replace("/kanban");
     }
-  }, [wantsNew, router]);
+  }, [wantsNew, wantsCsv, router]);
 
   const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 8 } });
   // Quantidade de sensores precisa ser constante: o dnd-kit usa sensors.map() como deps de efeito.
@@ -231,6 +242,14 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         onEdit={openEdit}
         onDelete={handleDeleteLead}
         onPatch={patchLead}
+        onError={setErrorMessage}
+      />
+
+      <CsvModal
+        open={csvOpen}
+        onClose={() => setCsvOpen(false)}
+        leads={leads}
+        onImported={(novos) => setLeads((prev) => [...novos, ...prev])}
         onError={setErrorMessage}
       />
 

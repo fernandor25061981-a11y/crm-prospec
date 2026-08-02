@@ -41,6 +41,29 @@ export async function createLead(lead: LeadInsert): Promise<Lead> {
   return data;
 }
 
+const TAMANHO_LOTE = 500;
+
+/**
+ * Insere em lotes porque uma importação grande estoura o limite de payload.
+ * O Postgres derruba o lote inteiro em qualquer linha inválida, então quem chama
+ * precisa validar antes (é o que `analisarCsv` faz).
+ */
+export async function createLeads(leads: LeadInsert[]): Promise<Lead[]> {
+  const criados: Lead[] = [];
+
+  for (let i = 0; i < leads.length; i += TAMANHO_LOTE) {
+    const { data, error } = await supabase
+      .from("leads")
+      .insert(leads.slice(i, i + TAMANHO_LOTE))
+      .select();
+
+    if (error) throw new Error(error.message);
+    criados.push(...data);
+  }
+
+  return criados;
+}
+
 export async function updateLead(leadId: string, patch: LeadUpdate): Promise<Lead> {
   const { data, error } = await supabase
     .from("leads")
