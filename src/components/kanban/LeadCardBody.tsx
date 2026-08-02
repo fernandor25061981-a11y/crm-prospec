@@ -4,7 +4,7 @@ import { CalendarClock } from "lucide-react";
 import { useState } from "react";
 import { AgendamentoModal } from "@/components/lead-detail/AgendamentoModal";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
-import { getLembreteDisplay } from "@/lib/leads";
+import { CONTATO_PRINCIPAL_COLORS, getContatoPrincipal, getLembreteDisplay } from "@/lib/leads";
 import type { Lead, StatusKanban } from "@/types/database";
 import { CallButton } from "./CallButton";
 import { ProximoContatoLabel } from "./ProximoContatoLabel";
@@ -29,6 +29,7 @@ export function LeadCardBody({
   const telefone = lead.telefone_fixo ?? lead.whatsapp;
   const [agendamentoOpen, setAgendamentoOpen] = useState(false);
   const lembrete = getLembreteDisplay(lead, fallbackTexto);
+  const contato = getContatoPrincipal(lead);
 
   return (
     <div
@@ -36,26 +37,22 @@ export function LeadCardBody({
         dragging ? "shadow-lg" : ""
       }`}
     >
+      <p className="mb-1.5 truncate text-base font-medium">{lead.nome}</p>
+
       <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
 
-      <p className="mt-1.5 truncate text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="mt-1.5 flex items-center justify-between gap-2 text-sm">
+        <span className={`min-w-0 truncate ${CONTATO_PRINCIPAL_COLORS[contato.tipo]}`}>
+          {contato.texto}
+        </span>
+        <span className="shrink-0">
+          <ProximoContatoLabel proximoContato={lead.proximo_contato} />
+        </span>
+      </div>
+
+      <p className="mt-1 truncate text-sm text-zinc-500 dark:text-zinc-400">
         {lembrete ? `Lembrete: ${lembrete}` : "Sem lembrete"}
       </p>
-
-      <p className="mt-2 truncate text-base font-medium">{lead.nome}</p>
-
-      <div className="mt-1 flex items-center justify-between gap-2 text-sm">
-        <span className="min-w-0 truncate text-yellow-600 dark:text-yellow-500">
-          {lead.recepcionista ?? "Sem atendente"}
-        </span>
-        <span className="shrink-0 truncate text-right text-green-600 dark:text-green-500">
-          {lead.responsavel ?? "Sem responsável"}
-        </span>
-      </div>
-
-      <div className="mt-1 flex items-center justify-between gap-2">
-        <ProximoContatoLabel proximoContato={lead.proximo_contato} />
-      </div>
 
       {!dragging && onPatch && onError && (
         <div className="mt-2 flex items-center justify-end gap-1.5 border-t border-black/[.06] pt-2 dark:border-white/[.08]">

@@ -3,7 +3,7 @@
 import { CalendarClock } from "lucide-react";
 import { useState } from "react";
 import { AgendamentoModal } from "@/components/lead-detail/AgendamentoModal";
-import { getLembreteDisplay } from "@/lib/leads";
+import { CONTATO_PRINCIPAL_COLORS, getContatoPrincipal, getLembreteDisplay } from "@/lib/leads";
 import type { Lead } from "@/types/database";
 import { CallButton } from "./CallButton";
 import { ProximoContatoLabel } from "./ProximoContatoLabel";
@@ -40,35 +40,36 @@ export function NotificationCard({
   const telefone = lead.telefone_fixo ?? lead.whatsapp;
   const [agendamentoOpen, setAgendamentoOpen] = useState(false);
   const lembrete = getLembreteDisplay(lead, fallbackTexto);
+  const contato = getContatoPrincipal(lead);
 
   return (
     <div className="flex shrink-0 items-center gap-3 rounded-md border border-red-200 bg-white px-3 py-2 shadow-sm dark:border-red-900/60 dark:bg-zinc-900">
       <div className="min-w-0 flex-1 cursor-pointer" onClick={() => onOpen(lead)}>
         <p className="truncate text-base font-medium">{lead.nome}</p>
-        <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
-          {lead.recepcionista ?? "Sem atendente"} · {lead.responsavel ?? "Sem responsável"}
+        <p className={`truncate text-sm ${CONTATO_PRINCIPAL_COLORS[contato.tipo]}`}>
+          {contato.texto}
         </p>
-        <p className="text-sm font-medium text-red-600 dark:text-red-400">
-          Atrasado {formatAtraso(lead.proximo_contato, now)}
-        </p>
-        <div>
-          <ProximoContatoLabel proximoContato={lead.proximo_contato} />
-        </div>
         <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
           {lembrete ? `Lembrete: ${lembrete}` : "Sem lembrete"}
         </p>
       </div>
-      <div className="ml-auto flex shrink-0 items-center gap-1.5 border-l border-black/[.06] pl-2 dark:border-white/[.08]">
-        <CallButton telefone={telefone} />
-        <WhatsappButton whatsapp={lead.whatsapp} />
-        <button
-          type="button"
-          title="Agendamento"
-          onClick={() => setAgendamentoOpen(true)}
-          className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
-        >
-          <CalendarClock className="h-5 w-5" />
-        </button>
+      <div className="ml-auto flex shrink-0 flex-col items-end gap-1 border-l border-black/[.06] pl-2 dark:border-white/[.08]">
+        <p className="text-sm font-medium text-red-600 dark:text-red-400">
+          Atrasado {formatAtraso(lead.proximo_contato, now)}
+        </p>
+        <ProximoContatoLabel proximoContato={lead.proximo_contato} />
+        <div className="flex items-center gap-1.5">
+          <CallButton telefone={telefone} />
+          <WhatsappButton whatsapp={lead.whatsapp} />
+          <button
+            type="button"
+            title="Agendamento"
+            onClick={() => setAgendamentoOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
+          >
+            <CalendarClock className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       <AgendamentoModal
