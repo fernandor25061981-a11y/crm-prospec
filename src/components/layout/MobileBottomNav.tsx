@@ -1,14 +1,15 @@
 "use client";
 
-import { Calendar, FileSpreadsheet, LayoutGrid, LogOut, Plus } from "lucide-react";
+import { Calendar, FileSpreadsheet, LayoutGrid, LogOut, Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FOCUS_RING } from "@/lib/ui";
 
-// "+ Lead" e "CSV" abrem modais via query string; não são destinos, então nunca
-// entram no estado ativo (por isso só os itens sem query trazem `match`).
+// "+ Lead", "Buscar" e "CSV" abrem modais via query string; não são destinos,
+// então nunca entram no estado ativo (por isso só os itens sem query trazem `match`).
 const NAV_LINKS = [
   { href: "/kanban?new=1", label: "+ Lead", icon: Plus, match: null },
+  { href: "/kanban?busca=1", label: "Buscar", icon: Search, match: null },
   { href: "/kanban", label: "Kanban", icon: LayoutGrid, match: "/kanban" },
   { href: "/agenda", label: "Agenda", icon: Calendar, match: "/agenda" },
   { href: "/kanban?csv=1", label: "CSV", icon: FileSpreadsheet, match: null },

@@ -15,6 +15,9 @@ export default function AppLayout({ children }: Readonly<{ children: React.React
         <Link href="/kanban?new=1" className={navButtonClass}>
           + Lead
         </Link>
+        <Link href="/kanban?busca=1" className={navButtonClass}>
+          Buscar
+        </Link>
         <Link href="/kanban?csv=1" className={navButtonClass}>
           CSV
         </Link>

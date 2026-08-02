@@ -11,6 +11,7 @@ import {
 } from "@dnd-kit/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { BuscaModal } from "@/components/busca/BuscaModal";
 import { CsvModal } from "@/components/csv/CsvModal";
 import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
 import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
@@ -37,12 +38,15 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   const [ultimasInteracoes, setUltimasInteracoes] = useState<Map<string, string>>(new Map());
   const wantsNew = searchParams.get("new") === "1";
   const wantsCsv = searchParams.get("csv") === "1";
+  const wantsBusca = searchParams.get("busca") === "1";
   const [detail, setDetail] = useState<DetailState>(() =>
     wantsNew ? { mode: "create" } : { mode: "closed" }
   );
   const [handledNew, setHandledNew] = useState(wantsNew);
   const [csvOpen, setCsvOpen] = useState(wantsCsv);
   const [handledCsv, setHandledCsv] = useState(wantsCsv);
+  const [buscaOpen, setBuscaOpen] = useState(wantsBusca);
+  const [handledBusca, setHandledBusca] = useState(wantsBusca);
 
   if (wantsNew && !handledNew) {
     setHandledNew(true);
@@ -58,11 +62,18 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
     setHandledCsv(false);
   }
 
+  if (wantsBusca && !handledBusca) {
+    setHandledBusca(true);
+    setBuscaOpen(true);
+  } else if (!wantsBusca && handledBusca) {
+    setHandledBusca(false);
+  }
+
   useEffect(() => {
-    if (wantsNew || wantsCsv) {
+    if (wantsNew || wantsCsv || wantsBusca) {
       router.replace("/kanban");
     }
-  }, [wantsNew, wantsCsv, router]);
+  }, [wantsNew, wantsCsv, wantsBusca, router]);
 
   const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 8 } });
   // Quantidade de sensores precisa ser constante: o dnd-kit usa sensors.map() como deps de efeito.
@@ -234,6 +245,16 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         onDelete={handleDeleteLead}
         onPatch={patchLead}
         onError={setErrorMessage}
+      />
+
+      <BuscaModal
+        open={buscaOpen}
+        onClose={() => setBuscaOpen(false)}
+        leads={leads}
+        onSelect={(lead) => {
+          setBuscaOpen(false);
+          openFicha(lead);
+        }}
       />
 
       <CsvModal
