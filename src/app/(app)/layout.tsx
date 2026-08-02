@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { SidebarNav } from "@/components/layout/SidebarNav";
-import { BTN_PRIMARY, FOCUS_RING } from "@/lib/ui";
+import { SIDEBAR_ITEM, SIDEBAR_ITEM_IDLE } from "@/lib/ui";
 import { logout } from "../login/actions";
 
-const navButtonClass = `${BTN_PRIMARY} px-2 text-center`;
+const navButtonClass = `${SIDEBAR_ITEM} ${SIDEBAR_ITEM_IDLE}`;
 
 export default function AppLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="min-h-full flex">
-      <aside className="hidden w-32 shrink-0 border-r border-line md:flex flex-col gap-1 p-2">
+      <aside className="hidden w-32 shrink-0 border-r border-line md:flex flex-col gap-2 p-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/preguica.gif" alt="" className="w-full rounded-md" />
         <Link href="/kanban?new=1" className={navButtonClass}>
@@ -20,10 +20,8 @@ export default function AppLayout({ children }: Readonly<{ children: React.React
         </Link>
         <SidebarNav />
         <form action={logout}>
-          <button
-            type="submit"
-            className={`w-full rounded-md px-2 py-2 text-left text-sm font-medium text-faint hover:bg-hover ${FOCUS_RING}`}
-          >
+          {/* w-full porque o filho flex do aside é o <form>, não o <button>. */}
+          <button type="submit" className={`w-full ${navButtonClass}`}>
             Sair
           </button>
         </form>

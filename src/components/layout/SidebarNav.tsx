@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FOCUS_RING } from "@/lib/ui";
+import { SIDEBAR_ITEM, SIDEBAR_ITEM_ACTIVE, SIDEBAR_ITEM_IDLE } from "@/lib/ui";
 
 const NAV_LINKS = [
   { href: "/kanban", label: "Kanban" },
@@ -13,7 +13,9 @@ export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="mt-1 flex flex-1 flex-col gap-1">
+    // O gap acompanha o do <aside>: o vão CSV→Kanban e Agenda→Sair vem de lá,
+    // o Kanban→Agenda vem daqui, e os três precisam bater.
+    <nav className="flex flex-col gap-2">
       {NAV_LINKS.map((link) => {
         const active = pathname === link.href;
         return (
@@ -21,11 +23,7 @@ export function SidebarNav() {
             key={link.href}
             href={link.href}
             aria-current={active ? "page" : undefined}
-            className={`rounded-md px-2 py-1.5 text-center text-sm font-medium ${FOCUS_RING} ${
-              active
-                ? "bg-accent-soft text-accent"
-                : "border border-line-strong text-muted hover:bg-hover"
-            }`}
+            className={`${SIDEBAR_ITEM} ${active ? SIDEBAR_ITEM_ACTIVE : SIDEBAR_ITEM_IDLE}`}
           >
             {link.label}
           </Link>

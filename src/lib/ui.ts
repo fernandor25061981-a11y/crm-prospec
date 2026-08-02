@@ -15,3 +15,11 @@ export const BTN_PRIMARY = `rounded-md bg-accent px-3 py-1.5 text-sm font-medium
 export const BTN_GHOST = `rounded-md px-3 py-1.5 text-sm text-muted hover:bg-hover ${FOCUS_RING}`;
 export const BTN_OUTLINE = `rounded-md border border-line-strong px-3 py-1.5 text-sm text-muted hover:bg-hover ${FOCUS_RING}`;
 export const BTN_ICON = `flex h-10 w-10 items-center justify-center rounded-md hover:bg-hover ${FOCUS_RING}`;
+
+// Item da sidebar desktop. Todos os botões (+ Lead, CSV, Kanban, Agenda, Sair)
+// usam a mesma base; só Kanban/Agenda alternam para o estado ativo. As duas
+// variantes precisam declarar a cor da borda: no Tailwind v4 o `border` sozinho
+// cai em `currentColor`. O `border-transparent` no ativo evita o pulo de 2px.
+export const SIDEBAR_ITEM = `rounded-md border px-2 py-1.5 text-center text-sm font-medium ${FOCUS_RING}`;
+export const SIDEBAR_ITEM_IDLE = "border-line-strong text-muted hover:bg-hover";
+export const SIDEBAR_ITEM_ACTIVE = "border-transparent bg-accent-soft text-accent";
