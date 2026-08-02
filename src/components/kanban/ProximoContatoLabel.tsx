@@ -34,19 +34,19 @@ export function ProximoContatoLabel({
   }, [proximoContato]);
 
   if (!proximoContato) {
-    return <span className="text-xs text-zinc-400 dark:text-zinc-500">Sem próximo contato</span>;
+    return <span className="text-[18px] text-zinc-400 dark:text-zinc-500">Sem próximo contato</span>;
   }
 
   if (!display) {
-    return <span className="text-xs text-zinc-500 dark:text-zinc-400">…</span>;
+    return <span className="text-[18px] text-zinc-500 dark:text-zinc-400">…</span>;
   }
 
   return (
     <span
       className={
         display.overdue
-          ? "text-xs font-medium text-red-600 dark:text-red-400"
-          : "text-xs text-zinc-500 dark:text-zinc-400"
+          ? "text-[18px] font-medium text-red-600 dark:text-red-400"
+          : "text-[18px] text-zinc-500 dark:text-zinc-400"
       }
     >
       {display.text}

@@ -15,8 +15,8 @@ const TEMPERATURA_SITE_OPTIONS: TemperaturaSite[] = ["sem_site", "incompleto", "
 const TEMPERATURA_GMN_OPTIONS: TemperaturaGmn[] = ["sem_perfil", "abandonado", "otimizado"];
 
 const inputClassName =
-  "w-full rounded-md border border-black/[.08] bg-transparent px-3 py-1.5 text-sm dark:border-white/[.145]";
-const labelClassName = "mb-1 block text-xs text-zinc-500 dark:text-zinc-400";
+  "w-full rounded-md border border-black/[.08] bg-transparent px-3 py-1.5 text-base dark:border-white/[.145]";
+const labelClassName = "mb-1 block text-sm text-zinc-500 dark:text-zinc-400";
 
 function Field({
   label,
@@ -119,30 +119,6 @@ export function LeadFormPanel({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <Field label="URL do Maps">
-          <div className="flex gap-2">
-            <input
-              type="url"
-              value={form.maps_url}
-              onChange={(e) => onChange({ maps_url: e.target.value })}
-              className={inputClassName}
-            />
-            <a
-              href={form.maps_url || undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-disabled={!form.maps_url}
-              title="Abrir no Maps"
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
-                form.maps_url
-                  ? "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/[.06]"
-                  : "pointer-events-none text-zinc-300 dark:text-zinc-700"
-              }`}
-            >
-              <MapPin className="h-4 w-4" />
-            </a>
-          </div>
-        </Field>
         <Field label="URL do Website">
           <div className="flex gap-2">
             <input
@@ -167,9 +143,33 @@ export function LeadFormPanel({
             </a>
           </div>
         </Field>
+        <Field label="URL do Maps">
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={form.maps_url}
+              onChange={(e) => onChange({ maps_url: e.target.value })}
+              className={inputClassName}
+            />
+            <a
+              href={form.maps_url || undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-disabled={!form.maps_url}
+              title="Abrir no Maps"
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
+                form.maps_url
+                  ? "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/[.06]"
+                  : "pointer-events-none text-zinc-300 dark:text-zinc-700"
+              }`}
+            >
+              <MapPin className="h-4 w-4" />
+            </a>
+          </div>
+        </Field>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <TemperatureSelector
           label="Status do Site"
           value={form.temperatura_site}

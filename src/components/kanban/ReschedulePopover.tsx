@@ -76,9 +76,9 @@ export function ReschedulePopover({
         title="Reagendar próximo contato"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={handleOpen}
-        className="flex h-12 w-12 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
+        className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
       >
-        <CalendarClock className="h-6 w-6" />
+        <CalendarClock className="h-5 w-5" />
       </button>
 
       {open && pos && (

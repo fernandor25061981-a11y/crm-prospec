@@ -15,7 +15,7 @@ export function TemperatureSelector<T extends string>({
 }) {
   return (
     <div>
-      <span className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">{label}</span>
+      <span className="mb-1 block text-sm text-zinc-500 dark:text-zinc-400">{label}</span>
       <div role="radiogroup" aria-label={label} className="flex gap-2">
         {options.map((option) => {
           const selected = option === value;
@@ -26,7 +26,7 @@ export function TemperatureSelector<T extends string>({
               role="radio"
               aria-checked={selected}
               onClick={() => onChange(option)}
-              className={`flex-1 rounded-md border px-2 py-1.5 text-xs font-medium transition-colors ${
+              className={`flex-1 rounded-md border px-2 py-1.5 text-sm font-medium transition-colors ${
                 selected
                   ? `${colors[option]} border-transparent text-white`
                   : "border-black/[.08] bg-transparent text-zinc-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-zinc-300 dark:hover:bg-white/[.06]"

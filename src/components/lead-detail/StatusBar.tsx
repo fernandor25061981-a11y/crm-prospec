@@ -14,7 +14,7 @@ export function StatusBar<T extends string>({
   const content = (
     <>
       <span className={`block h-2.5 w-full rounded-full ${colors[value]}`} />
-      <span className="mt-1 block text-center text-xs text-zinc-500 dark:text-zinc-400">
+      <span className="mt-1 block text-center text-sm text-zinc-500 dark:text-zinc-400">
         {label}
       </span>
     </>

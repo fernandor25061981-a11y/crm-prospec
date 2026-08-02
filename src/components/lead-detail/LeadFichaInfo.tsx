@@ -50,7 +50,7 @@ function ActionButton({
           {icon}
         </a>
       )}
-      <span className="mt-1 block truncate text-center text-xs text-zinc-500 dark:text-zinc-400">
+      <span className="mt-1 block truncate text-center text-sm text-zinc-500 dark:text-zinc-400">
         {caption}
       </span>
     </div>
@@ -78,14 +78,14 @@ export function LeadFichaInfo({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold">{lead.nome}</h1>
-        <h2 className="text-sm text-zinc-600 dark:text-zinc-300">
+        <h1 className="text-2xl font-semibold">{lead.nome}</h1>
+        <h2 className="text-base text-zinc-600 dark:text-zinc-300">
           {lead.categoria ?? "Sem categoria"}
         </h2>
-        <h3 className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <h3 className="mt-2 text-base text-zinc-500 dark:text-zinc-400">
           {lead.responsavel ?? "Sem responsável"} · {lead.recepcionista ?? "Sem recepcionista"}
         </h3>
-        <h3 className="text-sm text-zinc-500 dark:text-zinc-400">
+        <h3 className="text-base text-zinc-500 dark:text-zinc-400">
           {lead.cidade ?? "Sem cidade"} · {lead.idade_negocio ?? "Sem idade do negócio"}
         </h3>
       </div>

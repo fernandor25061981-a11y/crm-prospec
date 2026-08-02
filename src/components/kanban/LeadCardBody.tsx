@@ -31,9 +31,9 @@ export function LeadCardBody({
     >
       <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
 
-      <p className="mt-2 truncate text-lg font-medium">{lead.nome}</p>
+      <p className="mt-2 truncate text-base font-medium">{lead.nome}</p>
 
-      <div className="mt-1 flex items-center justify-between gap-2 text-[18px] text-zinc-500 dark:text-zinc-400">
+      <div className="mt-1 flex items-center justify-between gap-2 text-sm text-zinc-500 dark:text-zinc-400">
         <span className="flex min-w-0 items-center gap-1">
           <Phone className="h-[18px] w-[18px] shrink-0" />
           <span className="truncate">{telefone ?? "Sem telefone"}</span>

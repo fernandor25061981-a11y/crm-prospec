@@ -19,12 +19,12 @@ export function TemperatureBar({
       title={`${TEMPERATURA_SITE_LABELS[site]} · ${TEMPERATURA_GMN_LABELS[gmn]}`}
     >
       <span
-        className={`flex h-6 flex-1 items-center justify-center rounded-full text-[11px] font-bold tracking-wide text-white ${TEMPERATURA_SITE_COLORS[site]}`}
+        className={`flex h-6 flex-1 items-center justify-center rounded-full text-sm font-bold tracking-wide text-black ${TEMPERATURA_SITE_COLORS[site]}`}
       >
         SITE
       </span>
       <span
-        className={`flex h-6 flex-1 items-center justify-center rounded-full text-[11px] font-bold tracking-wide text-white ${TEMPERATURA_GMN_COLORS[gmn]}`}
+        className={`flex h-6 flex-1 items-center justify-center rounded-full text-sm font-bold tracking-wide text-black ${TEMPERATURA_GMN_COLORS[gmn]}`}
       >
         GMN
       </span>
