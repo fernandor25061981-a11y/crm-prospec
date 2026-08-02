@@ -45,6 +45,16 @@ export function formatDataHora(iso: string): string {
   }).format(new Date(iso));
 }
 
+/** Igual ao formatDataHora, mas sem o ano: o card do kanban é estreito no desktop. */
+export function formatDataHoraSemAno(iso: string): string {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
+
 /** Igual ao formatDataHora, mas com ano de 4 dígitos: o CSV precisa reimportar sem ambiguidade. */
 export function formatDataHoraCsv(iso: string): string {
   return new Intl.DateTimeFormat("pt-BR", {

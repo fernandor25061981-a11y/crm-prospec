@@ -41,7 +41,7 @@ export function LeadCardBody({
       <div className="flex items-center gap-2">
         <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
         <span className="ml-auto min-w-0 truncate text-right">
-          <ProximoContatoLabel proximoContato={lead.proximo_contato} />
+          <ProximoContatoLabel proximoContato={lead.proximo_contato} curtoNoDesktop />
         </span>
       </div>
 

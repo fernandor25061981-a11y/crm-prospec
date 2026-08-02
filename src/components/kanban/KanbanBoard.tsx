@@ -21,7 +21,6 @@ import type { Lead, StatusKanban } from "@/types/database";
 import { KanbanColumn } from "./KanbanColumn";
 import { LeadCardBody } from "./LeadCardBody";
 import { NotificationColumn } from "./NotificationColumn";
-import { NotificationQueue } from "./NotificationQueue";
 
 type DetailState =
   | { mode: "closed" }
@@ -164,7 +163,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   return (
     <div className="flex h-dvh flex-col">
       {errorMessage && (
-        <div className="flex items-center justify-between border-b border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+        <div className="flex items-center justify-between border-b border-line-danger bg-red-50 px-6 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
           {errorMessage}
           <button
             type="button"
@@ -176,17 +175,6 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         </div>
       )}
 
-      <div className="hidden md:block">
-        <NotificationQueue
-          overdueLeads={overdueLeads}
-          now={now}
-          ultimasInteracoes={ultimasInteracoes}
-          onPatch={patchLead}
-          onError={setErrorMessage}
-          onOpen={openFicha}
-        />
-      </div>
-
       <DndContext
         id="kanban-board"
         sensors={sensors}
@@ -196,8 +184,11 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
       >
         <div className="flex-1 overflow-x-auto overflow-y-hidden snap-x snap-mandatory md:snap-none">
           {/* O padding fica na linha, não no container de scroll: o padding-right de um
-              container rolável é ignorado no fim do scroll e cortava a última coluna. */}
-          <div className="flex h-full gap-4 p-6 md:min-w-max">
+              container rolável é ignorado no fim do scroll e cortava a última coluna.
+              O min-w-max é a outra metade da correção — sem ele a linha fica presa na
+              largura da viewport, as colunas transbordam a caixa dela e o padding-right
+              volta a ficar de fora da área rolável. Vale nos dois breakpoints. */}
+          <div className="flex h-full gap-4 p-6 min-w-max">
             {overdueLeads.length > 0 && (
               <NotificationColumn
                 overdueLeads={overdueLeads}

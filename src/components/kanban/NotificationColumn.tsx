@@ -17,8 +17,8 @@ export function NotificationColumn({
   onOpen: (lead: Lead) => void;
 }) {
   return (
-    <div className="flex h-full w-[calc(100vw-3rem)] shrink-0 snap-center flex-col rounded-lg border border-red-200 md:hidden dark:border-red-900/60">
-      <div className="flex items-center justify-center gap-2 border-b border-red-200 px-3 py-2 dark:border-red-900/60">
+    <div className="flex h-full w-[calc(100vw-3rem)] shrink-0 snap-center flex-col rounded-lg border border-line-danger md:w-96 md:snap-none">
+      <div className="flex items-center justify-center gap-2 border-b border-line-danger px-3 py-2">
         <h2 className="text-center text-lg font-semibold text-red-700 dark:text-red-400">
           Fila de Notificações
         </h2>

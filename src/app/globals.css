@@ -81,6 +81,19 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* "Zoom" de 80% no desktop. O Tailwind v4 mede tipografia e espaçamento em rem,
+   então encolher a fonte-raiz encolhe a interface junto — sem tocar em h-dvh nem
+   em 100vw, que o board usa e que o `zoom` bagunçaria.
+   Percentual, não px: assim respeita quem aumentou a fonte padrão do navegador.
+   A condição é a mesma que o Tailwind gera para o `md:` (48rem), para as duas
+   nunca descolarem. Em media query o rem resolve contra o tamanho inicial (16px),
+   não contra o valor declarado aqui — o breakpoint não se move. */
+@media (width >= 48rem) {
+  :root {
+    font-size: 80%;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
