@@ -88,7 +88,7 @@ export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
   return (
     <div className="flex h-dvh flex-col">
       {errorMessage && (
-        <div className="flex items-center justify-between border-b border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+        <div className="flex items-center justify-between border-b border-line-danger bg-red-50 px-6 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
           {errorMessage}
           <button
             type="button"

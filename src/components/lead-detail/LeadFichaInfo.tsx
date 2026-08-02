@@ -37,7 +37,7 @@ function ActionButton({
     : tone === "accent"
       ? "border-line-strong text-green-600 hover:bg-hover dark:text-green-500"
       : tone === "danger"
-        ? "border-red-300 text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/30"
+        ? "border-line-danger-strong text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
         : "border-line-strong text-muted hover:bg-hover";
 
   const className = `flex h-10 w-full items-center justify-center rounded-md border ${FOCUS_RING} ${toneClassName}`;

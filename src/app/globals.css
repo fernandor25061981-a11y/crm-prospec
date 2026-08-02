@@ -8,6 +8,8 @@
   --line: #71717a; /* zinc-500, 4,83:1 — estrutura: card, coluna, modal, sidebar, nav */
   --line-soft: #a1a1aa; /* zinc-400, 2,56:1 — divisores internos */
   --line-strong: #5f5f68; /* 6,32:1 — input, select, textarea, botão outline */
+  --line-danger: #dc2626; /* red-600, 4,82:1 — pareia com --line */
+  --line-danger-strong: #b91c1c; /* red-700, 6,47:1 — pareia com --line-strong */
 
   /* Texto — 3 níveis, todos passando AA */
   --muted: #52525b; /* 7,73:1 — secundário legível */
@@ -34,6 +36,8 @@
     --line: #7d7d85; /* 4,85:1 */
     --line-soft: #52525b; /* zinc-600, 2,56:1 */
     --line-strong: #929299; /* 6,40:1 */
+    --line-danger: #ef4444; /* red-500, 5,26:1 */
+    --line-danger-strong: #f87171; /* red-400, 7,16:1 */
 
     --muted: #d4d4d8; /* 13,4:1 */
     --faint: #a1a1aa; /* 7,72:1 */
@@ -57,6 +61,8 @@
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
   --color-line-strong: var(--line-strong);
+  --color-line-danger: var(--line-danger);
+  --color-line-danger-strong: var(--line-danger-strong);
 
   --color-muted: var(--muted);
   --color-faint: var(--faint);
