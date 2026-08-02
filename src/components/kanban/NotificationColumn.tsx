@@ -18,11 +18,11 @@ export function NotificationColumn({
 }) {
   return (
     <div className="flex h-full w-[calc(100vw-3rem)] shrink-0 snap-center flex-col rounded-lg border border-red-200 md:hidden dark:border-red-900/60">
-      <div className="relative flex items-center justify-center border-b border-red-200 px-3 py-2 dark:border-red-900/60">
+      <div className="flex items-center justify-center gap-2 border-b border-red-200 px-3 py-2 dark:border-red-900/60">
         <h2 className="text-center text-lg font-semibold text-red-700 dark:text-red-400">
           Fila de Notificações
         </h2>
-        <span className="absolute right-3 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 dark:bg-red-900 dark:text-red-300">
+        <span className="min-w-7 rounded-full bg-red-100 px-2 py-0.5 text-center text-lg font-bold leading-tight tabular-nums text-red-700 dark:bg-red-900 dark:text-red-200">
           {overdueLeads.length}
         </span>
       </div>

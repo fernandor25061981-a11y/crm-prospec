@@ -183,8 +183,10 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         onDragEnd={handleDragEnd}
         onDragCancel={() => setActiveId(null)}
       >
-        <div className="flex-1 overflow-x-auto overflow-y-hidden p-6 snap-x snap-mandatory md:snap-none">
-          <div className="flex h-full gap-4 md:min-w-max">
+        <div className="flex-1 overflow-x-auto overflow-y-hidden snap-x snap-mandatory md:snap-none">
+          {/* O padding fica na linha, não no container de scroll: o padding-right de um
+              container rolável é ignorado no fim do scroll e cortava a última coluna. */}
+          <div className="flex h-full gap-4 p-6 md:min-w-max">
             {overdueLeads.length > 0 && (
               <NotificationColumn
                 overdueLeads={overdueLeads}
