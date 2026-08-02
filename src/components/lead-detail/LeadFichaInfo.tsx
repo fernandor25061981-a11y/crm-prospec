@@ -10,11 +10,11 @@ import {
   TEMPERATURA_SITE_COLORS,
   TEMPERATURA_SITE_LABELS,
 } from "@/lib/temperatura";
-import { FOCUS_RING } from "@/lib/ui";
+import { BTN_ACTION, FOCUS_RING } from "@/lib/ui";
 import { getWhatsappUrl } from "@/lib/whatsapp";
 import type { Lead } from "@/types/database";
 import { AgendamentoModal } from "./AgendamentoModal";
-import { RegistrarInteracaoPanel } from "./RegistrarInteracaoPanel";
+import { ExcluirLeadModal } from "./ExcluirLeadModal";
 import { StatusBar } from "./StatusBar";
 
 function ActionButton({
@@ -40,21 +40,26 @@ function ActionButton({
         ? "border-line-danger-strong text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
         : "border-line-strong text-muted hover:bg-hover";
 
-  const className = `flex h-10 w-full items-center justify-center rounded-md border ${FOCUS_RING} ${toneClassName}`;
+  const className = `${BTN_ACTION} border ${toneClassName}`;
+  const content = (
+    <>
+      {icon}
+      <span className="truncate">{caption}</span>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={className}>
+        {content}
+      </button>
+    );
+  }
 
   return (
-    <div>
-      {onClick ? (
-        <button type="button" onClick={onClick} className={className}>
-          {icon}
-        </button>
-      ) : (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-          {icon}
-        </a>
-      )}
-      <span className="mt-1 block truncate text-center text-sm text-faint">{caption}</span>
-    </div>
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      {content}
+    </a>
   );
 }
 
@@ -64,18 +69,17 @@ export function LeadFichaInfo({
   onDelete,
   onPatch,
   onError,
-  onInteracaoSalva,
 }: {
   lead: Lead;
   onEdit: () => void;
   onDelete: () => void;
   onPatch: (patch: Partial<Lead>) => void;
   onError: (message: string) => void;
-  onInteracaoSalva: () => void;
 }) {
   const telefoneHref = lead.telefone_fixo ? `tel:${lead.telefone_fixo}` : undefined;
   const whatsappHref = getWhatsappUrl(lead.whatsapp) ?? undefined;
   const [agendamentoOpen, setAgendamentoOpen] = useState(false);
+  const [excluirOpen, setExcluirOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6">
@@ -90,9 +94,9 @@ export function LeadFichaInfo({
         </h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2">
         <StatusBar
-          label="Site"
+          label="SITE"
           value={lead.temperatura_site}
           labels={TEMPERATURA_SITE_LABELS}
           colors={TEMPERATURA_SITE_COLORS}
@@ -109,18 +113,6 @@ export function LeadFichaInfo({
 
       <div className="grid grid-cols-2 gap-2">
         <ActionButton
-          onClick={onDelete}
-          icon={<Trash2 className="h-4 w-4" />}
-          caption="Excluir lead"
-          tone="danger"
-        />
-        <ActionButton
-          onClick={onEdit}
-          icon={<Pencil className="h-4 w-4" />}
-          caption="Editar lead"
-          tone="accent"
-        />
-        <ActionButton
           href={telefoneHref}
           disabled={!telefoneHref}
           icon={<Phone className="h-4 w-4" />}
@@ -135,8 +127,11 @@ export function LeadFichaInfo({
       </div>
 
       <div className="rounded-md border border-line p-3">
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs text-faint">Próximo compromisso</span>
+        {/* Rótulo e data no mesmo tamanho e na mesma linha. O flex-wrap é só válvula
+            de segurança: no desktop a raiz é 80% e os dois cabem folgados, mas no
+            mobile 1,125rem vale 18px e a dupla estouraria a caixa. */}
+        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-2">
+          <span className="text-[1.125rem] text-faint">Próximo compromisso</span>
           <ProximoContatoLabel proximoContato={lead.proximo_contato} />
         </div>
         <p className="mb-2 text-sm text-muted">{lead.lembrete || "Sem lembrete"}</p>
@@ -150,6 +145,21 @@ export function LeadFichaInfo({
         </button>
       </div>
 
+      <div className="grid grid-cols-2 gap-2">
+        <ActionButton
+          onClick={onEdit}
+          icon={<Pencil className="h-4 w-4" />}
+          caption="Editar lead"
+          tone="accent"
+        />
+        <ActionButton
+          onClick={() => setExcluirOpen(true)}
+          icon={<Trash2 className="h-4 w-4" />}
+          caption="Excluir lead"
+          tone="danger"
+        />
+      </div>
+
       <AgendamentoModal
         leadId={lead.id}
         proximoContato={lead.proximo_contato}
@@ -160,7 +170,12 @@ export function LeadFichaInfo({
         onError={onError}
       />
 
-      <RegistrarInteracaoPanel leadId={lead.id} onError={onError} onSaved={onInteracaoSalva} />
+      <ExcluirLeadModal
+        nome={lead.nome}
+        open={excluirOpen}
+        onClose={() => setExcluirOpen(false)}
+        onConfirm={onDelete}
+      />
     </div>
   );
 }

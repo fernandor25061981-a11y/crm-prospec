@@ -3,9 +3,13 @@
 import { Phone } from "lucide-react";
 import { useState } from "react";
 import { WhatsAppIcon } from "@/components/kanban/WhatsAppIcon";
-import { BTN_GHOST, BTN_PRIMARY, FOCUS_RING } from "@/lib/ui";
+import { BTN_ACTION, BTN_GHOST, BTN_PRIMARY, FOCUS_RING } from "@/lib/ui";
 import { addAnotacaoManual } from "@/services/leads";
 import type { InteracaoTipo } from "@/types/database";
+
+// Mesma variante neutra do ActionButton da ficha, para os dois pares de botões
+// ficarem com a mesma altura e alinhamento.
+const BTN_REGISTRAR = `${BTN_ACTION} border border-line-strong text-muted hover:bg-hover`;
 
 function AnotacaoForm({
   tipo,
@@ -76,20 +80,14 @@ export function RegistrarInteracaoPanel({
 
   return (
     <div>
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => setFormTipo("ligacao")}
-          className={`flex items-center gap-1.5 rounded-md border border-line-strong px-2 py-1 text-xs text-muted hover:bg-hover ${FOCUS_RING}`}
-        >
-          <Phone className="h-3.5 w-3.5" /> Registrar Ligação
+      <div className="grid grid-cols-2 gap-2">
+        <button type="button" onClick={() => setFormTipo("ligacao")} className={BTN_REGISTRAR}>
+          <Phone className="h-4 w-4" />
+          <span className="truncate">Registrar Ligação</span>
         </button>
-        <button
-          type="button"
-          onClick={() => setFormTipo("whatsapp")}
-          className={`flex items-center gap-1.5 rounded-md border border-line-strong px-2 py-1 text-xs text-muted hover:bg-hover ${FOCUS_RING}`}
-        >
-          <WhatsAppIcon className="h-3.5 w-3.5" /> Registrar WhatsApp
+        <button type="button" onClick={() => setFormTipo("whatsapp")} className={BTN_REGISTRAR}>
+          <WhatsAppIcon className="h-4 w-4" />
+          <span className="truncate">Registrar WhatsApp</span>
         </button>
       </div>
 

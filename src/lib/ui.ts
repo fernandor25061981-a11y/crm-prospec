@@ -16,6 +16,11 @@ export const BTN_GHOST = `rounded-md px-3 py-1.5 text-sm text-muted hover:bg-hov
 export const BTN_OUTLINE = `rounded-md border border-line-strong px-3 py-1.5 text-sm text-muted hover:bg-hover ${FOCUS_RING}`;
 export const BTN_ICON = `flex h-10 w-10 items-center justify-center rounded-md hover:bg-hover ${FOCUS_RING}`;
 
+// Botão de ação da ficha: ocupa a coluna inteira do grid, com ícone + rótulo dentro.
+// Sem cor nem borda — cada variante (neutra, accent, danger, barra de temperatura)
+// completa por cima. É o que mantém os controles da ficha na mesma altura.
+export const BTN_ACTION = `flex h-10 w-full items-center justify-center gap-2 rounded-md px-2 text-sm ${FOCUS_RING}`;
+
 // Item da sidebar desktop. Todos os botões (+ Lead, CSV, Kanban, Agenda, Sair)
 // usam a mesma base; só Kanban/Agenda alternam para o estado ativo. As duas
 // variantes precisam declarar a cor da borda: no Tailwind v4 o `border` sozinho

@@ -6,6 +6,7 @@ import { BTN_GHOST } from "@/lib/ui";
 import type { Lead } from "@/types/database";
 import { HistoricoPanel } from "./HistoricoPanel";
 import { LeadFichaInfo } from "./LeadFichaInfo";
+import { RegistrarInteracaoPanel } from "./RegistrarInteracaoPanel";
 
 export function LeadFichaModal({
   lead,
@@ -44,11 +45,21 @@ export function LeadFichaModal({
           onDelete={() => onDelete(lead)}
           onPatch={(patch) => onPatch(lead.id, patch)}
           onError={onError}
-          onInteracaoSalva={() => setHistoricoVersion((v) => v + 1)}
         />
 
-        <div className="border-t border-line pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
-          <HistoricoPanel leadId={lead.id} onError={onError} refreshToken={historicoVersion} />
+        {/* Registrar interação mora aqui, e não na ficha, para ficar encostado no
+            histórico que ele alimenta — no desktop é a coluna de cima, no mobile
+            continua caindo logo depois da ficha. */}
+        <div className="flex flex-col gap-4 border-t border-line pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+          <RegistrarInteracaoPanel
+            leadId={lead.id}
+            onError={onError}
+            onSaved={() => setHistoricoVersion((v) => v + 1)}
+          />
+
+          <div className="min-h-0 flex-1">
+            <HistoricoPanel leadId={lead.id} onError={onError} refreshToken={historicoVersion} />
+          </div>
         </div>
       </div>
     </Modal>
