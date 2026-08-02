@@ -37,14 +37,14 @@ export function LeadCardBody({
         dragging ? "shadow-lg" : ""
       }`}
     >
-      <div className="mb-1.5 flex items-center justify-between gap-2">
-        <p className="min-w-0 truncate text-base font-medium">{lead.nome}</p>
-        <span className="shrink-0">
+      <p className="mb-1.5 truncate text-base font-medium">{lead.nome}</p>
+
+      <div className="flex items-center gap-2">
+        <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
+        <span className="ml-auto min-w-0 truncate text-right">
           <ProximoContatoLabel proximoContato={lead.proximo_contato} />
         </span>
       </div>
-
-      <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
 
       <p className={`mt-1.5 truncate text-sm ${CONTATO_PRINCIPAL_COLORS[contato.tipo]}`}>
         {contato.texto}
@@ -77,7 +77,10 @@ export function LeadCardBody({
             type="button"
             title="Agendamento"
             onPointerDown={(e) => e.stopPropagation()}
-            onClick={() => setAgendamentoOpen(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setAgendamentoOpen(true);
+            }}
             className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
           >
             <CalendarClock className="h-5 w-5" />
@@ -86,15 +89,19 @@ export function LeadCardBody({
       )}
 
       {onPatch && onError && (
-        <AgendamentoModal
-          leadId={lead.id}
-          proximoContato={lead.proximo_contato}
-          lembrete={lead.lembrete}
-          open={agendamentoOpen}
-          onClose={() => setAgendamentoOpen(false)}
-          onPatch={onPatch}
-          onError={onError}
-        />
+        // O Modal não é portalizado: sem isolar os eventos, cliques dentro dele
+        // borbulham até o onClick da raiz do LeadCard e abrem a ficha por trás.
+        <div onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+          <AgendamentoModal
+            leadId={lead.id}
+            proximoContato={lead.proximo_contato}
+            lembrete={lead.lembrete}
+            open={agendamentoOpen}
+            onClose={() => setAgendamentoOpen(false)}
+            onPatch={onPatch}
+            onError={onError}
+          />
+        </div>
       )}
     </div>
   );

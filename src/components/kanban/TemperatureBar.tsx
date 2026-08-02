@@ -15,16 +15,16 @@ export function TemperatureBar({
 }) {
   return (
     <div
-      className="flex w-full gap-1"
+      className="flex shrink-0 gap-1"
       title={`${TEMPERATURA_SITE_LABELS[site]} · ${TEMPERATURA_GMN_LABELS[gmn]}`}
     >
       <span
-        className={`flex h-6 flex-1 items-center justify-center rounded-full text-sm font-bold tracking-wide text-black ${TEMPERATURA_SITE_COLORS[site]}`}
+        className={`flex h-5 shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-bold tracking-wide text-black ${TEMPERATURA_SITE_COLORS[site]}`}
       >
         SITE
       </span>
       <span
-        className={`flex h-6 flex-1 items-center justify-center rounded-full text-sm font-bold tracking-wide text-black ${TEMPERATURA_GMN_COLORS[gmn]}`}
+        className={`flex h-5 shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-bold tracking-wide text-black ${TEMPERATURA_GMN_COLORS[gmn]}`}
       >
         GMN
       </span>
