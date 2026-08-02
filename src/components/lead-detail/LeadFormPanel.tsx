@@ -188,7 +188,7 @@ export function LeadFormPanel({
         />
       </div>
 
-      <Field label="Próximo Contato">
+      <Field label="Próximo Compromisso">
         <input
           type="datetime-local"
           value={form.proximo_contato}

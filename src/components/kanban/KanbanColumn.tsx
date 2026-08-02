@@ -8,6 +8,7 @@ export function KanbanColumn({
   status,
   label,
   leads,
+  ultimasInteracoes,
   onPatch,
   onError,
   onOpen,
@@ -16,6 +17,7 @@ export function KanbanColumn({
   status: StatusKanban;
   label: string;
   leads: Lead[];
+  ultimasInteracoes: Map<string, string>;
   onPatch: (leadId: string, patch: Partial<Lead>) => void;
   onError: (message: string) => void;
   onOpen: (lead: Lead) => void;
@@ -47,6 +49,7 @@ export function KanbanColumn({
           <LeadCard
             key={lead.id}
             lead={lead}
+            fallbackTexto={ultimasInteracoes.get(lead.id) ?? null}
             onPatch={(patch) => onPatch(lead.id, patch)}
             onError={onError}
             onOpen={onOpen}

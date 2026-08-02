@@ -1,27 +1,34 @@
-import { Phone } from "lucide-react";
+"use client";
+
+import { CalendarClock } from "lucide-react";
+import { useState } from "react";
+import { AgendamentoModal } from "@/components/lead-detail/AgendamentoModal";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
-import { getContatoLabel } from "@/lib/leads";
+import { getLembreteDisplay } from "@/lib/leads";
 import type { Lead, StatusKanban } from "@/types/database";
 import { CallButton } from "./CallButton";
 import { ProximoContatoLabel } from "./ProximoContatoLabel";
-import { ReschedulePopover } from "./ReschedulePopover";
 import { TemperatureBar } from "./TemperatureBar";
 import { WhatsappButton } from "./WhatsappButton";
 
 export function LeadCardBody({
   lead,
   dragging = false,
+  fallbackTexto = null,
   onPatch,
   onError,
   onChangeFase,
 }: {
   lead: Lead;
   dragging?: boolean;
+  fallbackTexto?: string | null;
   onPatch?: (patch: Partial<Lead>) => void;
   onError?: (message: string) => void;
   onChangeFase?: (novaFase: StatusKanban) => void;
 }) {
   const telefone = lead.telefone_fixo ?? lead.whatsapp;
+  const [agendamentoOpen, setAgendamentoOpen] = useState(false);
+  const lembrete = getLembreteDisplay(lead, fallbackTexto);
 
   return (
     <div
@@ -31,17 +38,22 @@ export function LeadCardBody({
     >
       <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
 
+      <p className="mt-1.5 truncate text-sm text-zinc-500 dark:text-zinc-400">
+        {lembrete ? `Lembrete: ${lembrete}` : "Sem lembrete"}
+      </p>
+
       <p className="mt-2 truncate text-base font-medium">{lead.nome}</p>
 
-      <div className="mt-1 flex items-center justify-between gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-        <span className="flex min-w-0 items-center gap-1">
-          <Phone className="h-[18px] w-[18px] shrink-0" />
-          <span className="truncate">{telefone ?? "Sem telefone"}</span>
+      <div className="mt-1 flex items-center justify-between gap-2 text-sm">
+        <span className="min-w-0 truncate text-yellow-600 dark:text-yellow-500">
+          {lead.recepcionista ?? "Sem atendente"}
         </span>
-        <span className="shrink-0 truncate text-right">{getContatoLabel(lead)}</span>
+        <span className="shrink-0 truncate text-right text-green-600 dark:text-green-500">
+          {lead.responsavel ?? "Sem responsável"}
+        </span>
       </div>
 
-      <div className="mt-1">
+      <div className="mt-1 flex items-center justify-between gap-2">
         <ProximoContatoLabel proximoContato={lead.proximo_contato} />
       </div>
 
@@ -64,13 +76,28 @@ export function LeadCardBody({
           )}
           <CallButton telefone={telefone} />
           <WhatsappButton whatsapp={lead.whatsapp} />
-          <ReschedulePopover
-            leadId={lead.id}
-            proximoContato={lead.proximo_contato}
-            onPatch={(proximoContato) => onPatch({ proximo_contato: proximoContato })}
-            onError={onError}
-          />
+          <button
+            type="button"
+            title="Agendamento"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={() => setAgendamentoOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
+          >
+            <CalendarClock className="h-5 w-5" />
+          </button>
         </div>
+      )}
+
+      {onPatch && onError && (
+        <AgendamentoModal
+          leadId={lead.id}
+          proximoContato={lead.proximo_contato}
+          lembrete={lead.lembrete}
+          open={agendamentoOpen}
+          onClose={() => setAgendamentoOpen(false)}
+          onPatch={onPatch}
+          onError={onError}
+        />
       )}
     </div>
   );

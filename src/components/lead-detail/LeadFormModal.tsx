@@ -105,7 +105,7 @@ export function LeadFormModal({
         await updateLead(lead.id, patch);
         onPatched(lead.id, patch);
       } else {
-        const novoLead: LeadInsert = { ...payload, status_kanban: "lead_novo" };
+        const novoLead: LeadInsert = { ...payload, status_kanban: "lead_novo", lembrete: null };
         const criado = await createLead(novoLead);
         onCreated(criado);
       }

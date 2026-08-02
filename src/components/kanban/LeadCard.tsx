@@ -7,12 +7,14 @@ import { LeadCardBody } from "./LeadCardBody";
 
 export function LeadCard({
   lead,
+  fallbackTexto = null,
   onPatch,
   onError,
   onOpen,
   onChangeFase,
 }: {
   lead: Lead;
+  fallbackTexto?: string | null;
   onPatch: (patch: Partial<Lead>) => void;
   onError: (message: string) => void;
   onOpen: (lead: Lead) => void;
@@ -34,6 +36,7 @@ export function LeadCard({
     >
       <LeadCardBody
         lead={lead}
+        fallbackTexto={fallbackTexto}
         onPatch={onPatch}
         onError={onError}
         onChangeFase={onChangeFase}

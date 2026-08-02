@@ -94,19 +94,41 @@ export async function updateLeadFase(
   return data;
 }
 
-export async function updateProximoContato(
+export async function updateAgendamento(
   leadId: string,
-  proximoContato: string | null
+  proximoContato: string | null,
+  lembrete: string | null
 ): Promise<Lead> {
   const { data, error } = await supabase
     .from("leads")
-    .update({ proximo_contato: proximoContato })
+    .update({ proximo_contato: proximoContato, lembrete })
     .eq("id", leadId)
     .select()
     .single();
 
   if (error) throw new Error(error.message);
   return data;
+}
+
+export async function getUltimasInteracoesRegistradas(
+  leadIds: string[]
+): Promise<Map<string, string>> {
+  if (leadIds.length === 0) return new Map();
+
+  const { data, error } = await supabase
+    .from("interacoes")
+    .select("lead_id, descricao, data_criacao")
+    .in("lead_id", leadIds)
+    .in("tipo", ["ligacao", "whatsapp"])
+    .order("data_criacao", { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  const map = new Map<string, string>();
+  for (const row of data) {
+    if (!map.has(row.lead_id) && row.descricao) map.set(row.lead_id, row.descricao);
+  }
+  return map;
 }
 
 export async function addAnotacaoManual(

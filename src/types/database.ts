@@ -31,6 +31,7 @@ export type Lead = {
   temperatura_site: TemperaturaSite;
   temperatura_gmn: TemperaturaGmn;
   proximo_contato: string | null;
+  lembrete: string | null;
   created_at: string;
   updated_at: string;
 };

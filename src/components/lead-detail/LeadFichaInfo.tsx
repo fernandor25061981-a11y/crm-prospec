@@ -1,7 +1,9 @@
 "use client";
 
-import { Pencil, Phone, Trash2 } from "lucide-react";
+import { CalendarClock, Pencil, Phone, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { WhatsAppIcon } from "@/components/kanban/WhatsAppIcon";
+import { ProximoContatoLabel } from "@/components/kanban/ProximoContatoLabel";
 import {
   TEMPERATURA_GMN_COLORS,
   TEMPERATURA_GMN_LABELS,
@@ -10,7 +12,7 @@ import {
 } from "@/lib/temperatura";
 import { getWhatsappUrl } from "@/lib/whatsapp";
 import type { Lead } from "@/types/database";
-import { AgendamentoInline } from "./AgendamentoInline";
+import { AgendamentoModal } from "./AgendamentoModal";
 import { RegistrarInteracaoPanel } from "./RegistrarInteracaoPanel";
 import { StatusBar } from "./StatusBar";
 
@@ -74,6 +76,7 @@ export function LeadFichaInfo({
 }) {
   const telefoneHref = lead.telefone_fixo ? `tel:${lead.telefone_fixo}` : undefined;
   const whatsappHref = getWhatsappUrl(lead.whatsapp) ?? undefined;
+  const [agendamentoOpen, setAgendamentoOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6">
@@ -134,10 +137,31 @@ export function LeadFichaInfo({
         />
       </div>
 
-      <AgendamentoInline
+      <div className="rounded-md border border-black/[.08] p-3 dark:border-white/[.145]">
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">Próximo compromisso</span>
+          <ProximoContatoLabel proximoContato={lead.proximo_contato} />
+        </div>
+        <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-300">
+          {lead.lembrete || "Sem lembrete"}
+        </p>
+        <button
+          type="button"
+          onClick={() => setAgendamentoOpen(true)}
+          className="flex h-9 w-full items-center justify-center gap-2 rounded-md border border-black/[.08] text-sm text-zinc-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-zinc-300 dark:hover:bg-white/[.06]"
+        >
+          <CalendarClock className="h-4 w-4" />
+          Editar agendamento
+        </button>
+      </div>
+
+      <AgendamentoModal
         leadId={lead.id}
         proximoContato={lead.proximo_contato}
-        onPatch={(proximo_contato) => onPatch({ proximo_contato })}
+        lembrete={lead.lembrete}
+        open={agendamentoOpen}
+        onClose={() => setAgendamentoOpen(false)}
+        onPatch={onPatch}
         onError={onError}
       />
 

@@ -6,12 +6,14 @@ import { NotificationCard } from "./NotificationCard";
 export function NotificationQueue({
   overdueLeads,
   now,
+  ultimasInteracoes,
   onPatch,
   onError,
   onOpen,
 }: {
   overdueLeads: Array<Lead & { proximo_contato: string }>;
   now: number;
+  ultimasInteracoes: Map<string, string>;
   onPatch: (leadId: string, patch: Partial<Lead>) => void;
   onError: (message: string) => void;
   onOpen: (lead: Lead) => void;
@@ -34,6 +36,7 @@ export function NotificationQueue({
             key={lead.id}
             lead={lead}
             now={now}
+            fallbackTexto={ultimasInteracoes.get(lead.id) ?? null}
             onPatch={onPatch}
             onError={onError}
             onOpen={onOpen}

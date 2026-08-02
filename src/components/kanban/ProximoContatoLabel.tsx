@@ -34,7 +34,9 @@ export function ProximoContatoLabel({
   }, [proximoContato]);
 
   if (!proximoContato) {
-    return <span className="text-[18px] text-zinc-400 dark:text-zinc-500">Sem próximo contato</span>;
+    return (
+      <span className="text-[18px] text-zinc-400 dark:text-zinc-500">Sem próximo compromisso</span>
+    );
   }
 
   if (!display) {

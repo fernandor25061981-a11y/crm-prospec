@@ -65,9 +65,12 @@ create table if not exists leads (
   temperatura_site  temperatura_site_enum not null default 'sem_site',
   temperatura_gmn   temperatura_gmn_enum not null default 'sem_perfil',
   proximo_contato   timestamptz,
+  lembrete          text,
   created_at        timestamptz not null default now(),
   updated_at        timestamptz not null default now()
 );
+
+alter table leads add column if not exists lembrete text;
 
 create index if not exists leads_status_kanban_idx on leads (status_kanban);
 create index if not exists leads_proximo_contato_idx on leads (proximo_contato);

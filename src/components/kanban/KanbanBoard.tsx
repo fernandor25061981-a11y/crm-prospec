@@ -13,10 +13,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
 import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useOverdueLeads } from "@/hooks/useOverdueLeads";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
-import { deleteLead, updateLeadFase } from "@/services/leads";
+import { deleteLead, getUltimasInteracoesRegistradas, updateLeadFase } from "@/services/leads";
 import type { Lead, StatusKanban } from "@/types/database";
 import { KanbanColumn } from "./KanbanColumn";
 import { LeadCardBody } from "./LeadCardBody";
@@ -35,6 +34,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   const [leads, setLeads] = useState(initialLeads);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [ultimasInteracoes, setUltimasInteracoes] = useState<Map<string, string>>(new Map());
   const wantsNew = searchParams.get("new") === "1";
   const [detail, setDetail] = useState<DetailState>(() =>
     wantsNew ? { mode: "create" } : { mode: "closed" }
@@ -54,10 +54,27 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
     }
   }, [wantsNew, router]);
 
-  const isMobile = useIsMobile();
   const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 8 } });
-  const sensors = useSensors(...(isMobile ? [] : [pointerSensor]));
+  // Quantidade de sensores precisa ser constante: o dnd-kit usa sensors.map() como deps de efeito.
+  // O drag no mobile continua desativado porque LeadCard não anexa os listeners nesse caso.
+  const sensors = useSensors(pointerSensor);
   const { overdueLeads, now } = useOverdueLeads(leads);
+
+  const leadIdsKey = useMemo(() => leads.map((l) => l.id).join(","), [leads]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getUltimasInteracoesRegistradas(leadIdsKey ? leadIdsKey.split(",") : [])
+      .then((map) => {
+        if (!cancelled) setUltimasInteracoes(map);
+      })
+      .catch(() => {
+        // Não bloqueia o board por um dado secundário; cards ficam sem fallback de lembrete.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [leadIdsKey]);
 
   const leadsByStatus = useMemo(() => {
     const map = new Map<StatusKanban, Lead[]>();
@@ -152,6 +169,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         <NotificationQueue
           overdueLeads={overdueLeads}
           now={now}
+          ultimasInteracoes={ultimasInteracoes}
           onPatch={patchLead}
           onError={setErrorMessage}
           onOpen={openFicha}
@@ -171,6 +189,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
               <NotificationColumn
                 overdueLeads={overdueLeads}
                 now={now}
+                ultimasInteracoes={ultimasInteracoes}
                 onPatch={patchLead}
                 onError={setErrorMessage}
                 onOpen={openFicha}
@@ -182,6 +201,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
                 status={status}
                 label={STATUS_KANBAN_LABELS[status]}
                 leads={leadsByStatus.get(status) ?? []}
+                ultimasInteracoes={ultimasInteracoes}
                 onPatch={patchLead}
                 onError={setErrorMessage}
                 onOpen={openFicha}
@@ -192,7 +212,13 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         </div>
 
         <DragOverlay>
-          {activeLead && <LeadCardBody lead={activeLead} dragging />}
+          {activeLead && (
+            <LeadCardBody
+              lead={activeLead}
+              dragging
+              fallbackTexto={ultimasInteracoes.get(activeLead.id) ?? null}
+            />
+          )}
         </DragOverlay>
       </DndContext>
 
