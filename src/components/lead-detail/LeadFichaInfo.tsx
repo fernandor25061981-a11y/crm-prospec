@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, Phone } from "lucide-react";
+import { Pencil, Phone, Trash2 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/kanban/WhatsAppIcon";
 import {
   TEMPERATURA_GMN_COLORS,
@@ -11,6 +11,7 @@ import {
 import { getWhatsappUrl } from "@/lib/whatsapp";
 import type { Lead } from "@/types/database";
 import { AgendamentoInline } from "./AgendamentoInline";
+import { RegistrarInteracaoPanel } from "./RegistrarInteracaoPanel";
 import { StatusBar } from "./StatusBar";
 
 function ActionButton({
@@ -18,21 +19,25 @@ function ActionButton({
   onClick,
   icon,
   caption,
-  primary,
+  tone = "neutral",
+  disabled,
 }: {
   href?: string;
   onClick?: () => void;
   icon: React.ReactNode;
   caption: string;
-  primary?: boolean;
+  tone?: "neutral" | "accent" | "danger";
+  disabled?: boolean;
 }) {
-  const className = primary
-    ? "flex h-10 w-full items-center justify-center rounded-md bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-    : `flex h-10 w-full items-center justify-center rounded-md border ${
-        href
-          ? "border-black/[.08] text-zinc-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-zinc-300 dark:hover:bg-white/[.06]"
-          : "pointer-events-none border-black/[.08] text-zinc-300 dark:border-white/[.145] dark:text-zinc-700"
-      }`;
+  const toneClassName = disabled
+    ? "pointer-events-none border-black/[.08] text-zinc-300 dark:border-white/[.145] dark:text-zinc-700"
+    : tone === "accent"
+      ? "border-black/[.08] text-green-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-green-500 dark:hover:bg-white/[.06]"
+      : tone === "danger"
+        ? "border-red-300 text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/30"
+        : "border-black/[.08] text-zinc-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-zinc-300 dark:hover:bg-white/[.06]";
+
+  const className = `flex h-10 w-full items-center justify-center rounded-md border ${toneClassName}`;
 
   return (
     <div>
@@ -55,14 +60,21 @@ function ActionButton({
 export function LeadFichaInfo({
   lead,
   onEdit,
+  onDelete,
   onPatch,
   onError,
+  onInteracaoSalva,
 }: {
   lead: Lead;
   onEdit: () => void;
+  onDelete: () => void;
   onPatch: (patch: Partial<Lead>) => void;
   onError: (message: string) => void;
+  onInteracaoSalva: () => void;
 }) {
+  const telefoneHref = lead.telefone_fixo ? `tel:${lead.telefone_fixo}` : undefined;
+  const whatsappHref = getWhatsappUrl(lead.whatsapp) ?? undefined;
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -95,20 +107,28 @@ export function LeadFichaInfo({
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
+        <ActionButton
+          onClick={onDelete}
+          icon={<Trash2 className="h-4 w-4" />}
+          caption="Excluir lead"
+          tone="danger"
+        />
         <ActionButton
           onClick={onEdit}
           icon={<Pencil className="h-4 w-4" />}
           caption="Editar lead"
-          primary
+          tone="accent"
         />
         <ActionButton
-          href={lead.telefone_fixo ? `tel:${lead.telefone_fixo}` : undefined}
+          href={telefoneHref}
+          disabled={!telefoneHref}
           icon={<Phone className="h-4 w-4" />}
           caption={lead.telefone_fixo ?? "Sem telefone"}
         />
         <ActionButton
-          href={getWhatsappUrl(lead.whatsapp) ?? undefined}
+          href={whatsappHref}
+          disabled={!whatsappHref}
           icon={<WhatsAppIcon className="h-4 w-4" />}
           caption={lead.whatsapp ?? "Sem WhatsApp"}
         />
@@ -120,6 +140,8 @@ export function LeadFichaInfo({
         onPatch={(proximo_contato) => onPatch({ proximo_contato })}
         onError={onError}
       />
+
+      <RegistrarInteracaoPanel leadId={lead.id} onError={onError} onSaved={onInteracaoSalva} />
     </div>
   );
 }

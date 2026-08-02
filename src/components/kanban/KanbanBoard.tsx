@@ -13,11 +13,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
 import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { useOverdueLeads } from "@/hooks/useOverdueLeads";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
-import { updateLeadFase } from "@/services/leads";
+import { deleteLead, updateLeadFase } from "@/services/leads";
 import type { Lead, StatusKanban } from "@/types/database";
 import { KanbanColumn } from "./KanbanColumn";
 import { LeadCardBody } from "./LeadCardBody";
+import { NotificationColumn } from "./NotificationColumn";
 import { NotificationQueue } from "./NotificationQueue";
 
 type DetailState =
@@ -51,9 +54,10 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
     }
   }, [wantsNew, router]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
-  );
+  const isMobile = useIsMobile();
+  const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 8 } });
+  const sensors = useSensors(...(isMobile ? [] : [pointerSensor]));
+  const { overdueLeads, now } = useOverdueLeads(leads);
 
   const leadsByStatus = useMemo(() => {
     const map = new Map<StatusKanban, Lead[]>();
@@ -89,19 +93,17 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
     setDetail((prev) => (prev.mode === "edit" ? { mode: "ficha", leadId: prev.leadId } : { mode: "closed" }));
   }
 
-  function handleDragStart(event: DragStartEvent) {
-    setActiveId(String(event.active.id));
+  async function handleDeleteLead(lead: Lead) {
+    try {
+      await deleteLead(lead.id);
+      setLeads((prev) => prev.filter((l) => l.id !== lead.id));
+      closeLeadDetail();
+    } catch {
+      setErrorMessage("Não foi possível excluir o lead. Tente novamente.");
+    }
   }
 
-  async function handleDragEnd(event: DragEndEvent) {
-    setActiveId(null);
-    const { active, over } = event;
-    if (!over) return;
-
-    const novaFase = over.id as StatusKanban;
-    if (!STATUS_KANBAN_ORDEM.includes(novaFase)) return;
-
-    const leadId = String(active.id);
+  async function moveLeadToFase(leadId: string, novaFase: StatusKanban) {
     const lead = leads.find((l) => l.id === leadId);
     if (!lead || lead.status_kanban === novaFase) return;
 
@@ -114,6 +116,21 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
       patchLead(leadId, { status_kanban: faseAnterior });
       setErrorMessage("Não foi possível mover o lead. Tente novamente.");
     }
+  }
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id));
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setActiveId(null);
+    const { active, over } = event;
+    if (!over) return;
+
+    const novaFase = over.id as StatusKanban;
+    if (!STATUS_KANBAN_ORDEM.includes(novaFase)) return;
+
+    moveLeadToFase(String(active.id), novaFase);
   }
 
   return (
@@ -131,7 +148,15 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         </div>
       )}
 
-      <NotificationQueue leads={leads} onPatch={patchLead} onError={setErrorMessage} />
+      <div className="hidden md:block">
+        <NotificationQueue
+          overdueLeads={overdueLeads}
+          now={now}
+          onPatch={patchLead}
+          onError={setErrorMessage}
+          onOpen={openFicha}
+        />
+      </div>
 
       <DndContext
         id="kanban-board"
@@ -140,8 +165,17 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         onDragEnd={handleDragEnd}
         onDragCancel={() => setActiveId(null)}
       >
-        <div className="flex-1 overflow-x-auto overflow-y-hidden p-6">
-          <div className="flex h-full min-w-max gap-4">
+        <div className="flex-1 overflow-x-auto overflow-y-hidden p-6 snap-x snap-mandatory md:snap-none">
+          <div className="flex h-full gap-4 md:min-w-max">
+            {overdueLeads.length > 0 && (
+              <NotificationColumn
+                overdueLeads={overdueLeads}
+                now={now}
+                onPatch={patchLead}
+                onError={setErrorMessage}
+                onOpen={openFicha}
+              />
+            )}
             {STATUS_KANBAN_ORDEM.map((status) => (
               <KanbanColumn
                 key={status}
@@ -151,6 +185,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
                 onPatch={patchLead}
                 onError={setErrorMessage}
                 onOpen={openFicha}
+                onChangeFase={moveLeadToFase}
               />
             ))}
           </div>
@@ -166,6 +201,7 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
         open={detail.mode === "ficha"}
         onClose={closeLeadDetail}
         onEdit={openEdit}
+        onDelete={handleDeleteLead}
         onPatch={patchLead}
         onError={setErrorMessage}
       />

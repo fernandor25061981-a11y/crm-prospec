@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { logout } from "../login/actions";
 
 const NAV_LINKS = [
@@ -9,7 +10,7 @@ const NAV_LINKS = [
 export default function AppLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="min-h-full flex">
-      <aside className="w-32 shrink-0 border-r border-black/[.08] dark:border-white/[.145] flex flex-col gap-1 p-2">
+      <aside className="hidden w-32 shrink-0 border-r border-black/[.08] dark:border-white/[.145] md:flex flex-col gap-1 p-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/preguica.gif" alt="" className="w-full rounded-md" />
         <Link
@@ -38,7 +39,8 @@ export default function AppLayout({ children }: Readonly<{ children: React.React
           </button>
         </form>
       </aside>
-      <main className="flex-1 min-w-0">{children}</main>
+      <main className="flex-1 min-w-0 pb-16 md:pb-0">{children}</main>
+      <MobileBottomNav logout={logout} />
     </div>
   );
 }

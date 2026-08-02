@@ -53,6 +53,11 @@ export async function updateLead(leadId: string, patch: LeadUpdate): Promise<Lea
   return data;
 }
 
+export async function deleteLead(leadId: string): Promise<void> {
+  const { error } = await supabase.from("leads").delete().eq("id", leadId);
+  if (error) throw new Error(error.message);
+}
+
 export async function getInteracoes(leadId: string): Promise<Interacao[]> {
   const { data, error } = await supabase
     .from("interacoes")

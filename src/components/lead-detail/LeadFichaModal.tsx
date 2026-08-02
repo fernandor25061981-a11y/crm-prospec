@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import type { Lead } from "@/types/database";
 import { HistoricoPanel } from "./HistoricoPanel";
@@ -10,6 +11,7 @@ export function LeadFichaModal({
   open,
   onClose,
   onEdit,
+  onDelete,
   onPatch,
   onError,
 }: {
@@ -17,9 +19,12 @@ export function LeadFichaModal({
   open: boolean;
   onClose: () => void;
   onEdit: (lead: Lead) => void;
+  onDelete: (lead: Lead) => void;
   onPatch: (leadId: string, patch: Partial<Lead>) => void;
   onError: (message: string) => void;
 }) {
+  const [historicoVersion, setHistoricoVersion] = useState(0);
+
   if (!lead) return null;
 
   return (
@@ -35,16 +40,18 @@ export function LeadFichaModal({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <LeadFichaInfo
           lead={lead}
           onEdit={() => onEdit(lead)}
+          onDelete={() => onDelete(lead)}
           onPatch={(patch) => onPatch(lead.id, patch)}
           onError={onError}
+          onInteracaoSalva={() => setHistoricoVersion((v) => v + 1)}
         />
 
         <div className="border-t border-black/[.08] pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0 dark:border-white/[.145]">
-          <HistoricoPanel leadId={lead.id} onError={onError} />
+          <HistoricoPanel leadId={lead.id} onError={onError} refreshToken={historicoVersion} />
         </div>
       </div>
     </Modal>

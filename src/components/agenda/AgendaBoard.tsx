@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
 import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
 import { dateKey, dateKeyFromIso, isSameDay } from "@/lib/agenda";
+import { deleteLead } from "@/services/leads";
 import type { Lead } from "@/types/database";
 import { AppointmentsPanel } from "./AppointmentsPanel";
 import { MonthCalendar } from "./MonthCalendar";
@@ -74,6 +75,16 @@ export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
     setDetail((prev) => (prev.mode === "edit" ? { mode: "ficha", leadId: prev.leadId } : { mode: "closed" }));
   }
 
+  async function handleDeleteLead(lead: Lead) {
+    try {
+      await deleteLead(lead.id);
+      setLeads((prev) => prev.filter((l) => l.id !== lead.id));
+      closeLeadDetail();
+    } catch {
+      setErrorMessage("Não foi possível excluir o lead. Tente novamente.");
+    }
+  }
+
   return (
     <div className="flex h-dvh flex-col">
       {errorMessage && (
@@ -127,6 +138,7 @@ export function AgendaBoard({ initialLeads }: { initialLeads: Lead[] }) {
         open={detail.mode === "ficha"}
         onClose={closeLeadDetail}
         onEdit={openEdit}
+        onDelete={handleDeleteLead}
         onPatch={patchLead}
         onError={setErrorMessage}
       />

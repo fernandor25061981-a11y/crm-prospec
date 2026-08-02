@@ -1,7 +1,8 @@
 "use client";
 
 import { useDraggable } from "@dnd-kit/core";
-import type { Lead } from "@/types/database";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import type { Lead, StatusKanban } from "@/types/database";
 import { LeadCardBody } from "./LeadCardBody";
 
 export function LeadCard({
@@ -9,25 +10,34 @@ export function LeadCard({
   onPatch,
   onError,
   onOpen,
+  onChangeFase,
 }: {
   lead: Lead;
   onPatch: (patch: Partial<Lead>) => void;
   onError: (message: string) => void;
   onOpen: (lead: Lead) => void;
+  onChangeFase: (novaFase: StatusKanban) => void;
 }) {
+  const isMobile = useIsMobile();
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: lead.id,
   });
 
+  const dragProps = isMobile ? {} : { ...listeners, ...attributes };
+
   return (
     <div
       ref={setNodeRef}
-      {...listeners}
-      {...attributes}
+      {...dragProps}
       onClick={() => onOpen(lead)}
-      className={`touch-none cursor-pointer ${isDragging ? "opacity-30" : ""}`}
+      className={`cursor-pointer ${isMobile ? "touch-pan-y" : "touch-none"} ${isDragging ? "opacity-30" : ""}`}
     >
-      <LeadCardBody lead={lead} onPatch={onPatch} onError={onError} />
+      <LeadCardBody
+        lead={lead}
+        onPatch={onPatch}
+        onError={onError}
+        onChangeFase={onChangeFase}
+      />
     </div>
   );
 }

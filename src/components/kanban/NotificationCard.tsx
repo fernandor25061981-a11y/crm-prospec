@@ -20,17 +20,19 @@ export function NotificationCard({
   now,
   onPatch,
   onError,
+  onOpen,
 }: {
   lead: Lead & { proximo_contato: string };
   now: number;
   onPatch: (leadId: string, patch: Partial<Lead>) => void;
   onError: (message: string) => void;
+  onOpen: (lead: Lead) => void;
 }) {
   const telefone = lead.telefone_fixo ?? lead.whatsapp;
 
   return (
     <div className="flex shrink-0 items-center gap-3 rounded-md border border-red-200 bg-white px-3 py-2 shadow-sm dark:border-red-900/60 dark:bg-zinc-900">
-      <div className="min-w-0">
+      <div className="min-w-0 cursor-pointer" onClick={() => onOpen(lead)}>
         <p className="max-w-[10rem] truncate text-sm font-medium">{lead.nome}</p>
         <p className="max-w-[10rem] truncate text-xs text-zinc-500 dark:text-zinc-400">
           {telefone ?? "Sem telefone"}

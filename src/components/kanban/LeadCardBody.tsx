@@ -1,5 +1,6 @@
 import { Phone } from "lucide-react";
-import type { Lead } from "@/types/database";
+import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
+import type { Lead, StatusKanban } from "@/types/database";
 import { ProximoContatoLabel } from "./ProximoContatoLabel";
 import { ReschedulePopover } from "./ReschedulePopover";
 import { TemperatureBar } from "./TemperatureBar";
@@ -10,11 +11,13 @@ export function LeadCardBody({
   dragging = false,
   onPatch,
   onError,
+  onChangeFase,
 }: {
   lead: Lead;
   dragging?: boolean;
   onPatch?: (patch: Partial<Lead>) => void;
   onError?: (message: string) => void;
+  onChangeFase?: (novaFase: StatusKanban) => void;
 }) {
   const telefone = lead.telefone_fixo ?? lead.whatsapp;
 
@@ -40,6 +43,21 @@ export function LeadCardBody({
       {!dragging && onPatch && onError && (
         <div className="mt-2 flex items-center justify-end gap-1 border-t border-black/[.06] pt-2 dark:border-white/[.08]">
           <WhatsappButton whatsapp={lead.whatsapp} />
+          {onChangeFase && (
+            <select
+              value={lead.status_kanban}
+              onChange={(e) => onChangeFase(e.target.value as StatusKanban)}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-md border border-black/[.08] bg-transparent px-1.5 py-1 text-xs md:hidden dark:border-white/[.145]"
+            >
+              {STATUS_KANBAN_ORDEM.map((status) => (
+                <option key={status} value={status}>
+                  {STATUS_KANBAN_LABELS[status]}
+                </option>
+              ))}
+            </select>
+          )}
           <ReschedulePopover
             leadId={lead.id}
             proximoContato={lead.proximo_contato}
