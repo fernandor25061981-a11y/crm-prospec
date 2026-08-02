@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDataHora } from "@/lib/datetime";
 
 type Display = { text: string; overdue: boolean };
 
 function computeDisplay(proximoContato: string): Display {
   const date = new Date(proximoContato);
   return {
-    text: new Intl.DateTimeFormat("pt-BR", {
-      dateStyle: "short",
-      timeStyle: "short",
-    }).format(date),
+    text: formatDataHora(proximoContato),
     overdue: date.getTime() < Date.now(),
   };
 }

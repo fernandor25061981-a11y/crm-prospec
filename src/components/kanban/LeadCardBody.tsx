@@ -37,20 +37,20 @@ export function LeadCardBody({
         dragging ? "shadow-lg" : ""
       }`}
     >
-      <p className="mb-1.5 truncate text-base font-medium">{lead.nome}</p>
-
-      <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
-
-      <div className="mt-1.5 flex items-center justify-between gap-2 text-sm">
-        <span className={`min-w-0 truncate ${CONTATO_PRINCIPAL_COLORS[contato.tipo]}`}>
-          {contato.texto}
-        </span>
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <p className="min-w-0 truncate text-base font-medium">{lead.nome}</p>
         <span className="shrink-0">
           <ProximoContatoLabel proximoContato={lead.proximo_contato} />
         </span>
       </div>
 
-      <p className="mt-1 truncate text-sm text-zinc-500 dark:text-zinc-400">
+      <TemperatureBar site={lead.temperatura_site} gmn={lead.temperatura_gmn} />
+
+      <p className={`mt-1.5 truncate text-sm ${CONTATO_PRINCIPAL_COLORS[contato.tipo]}`}>
+        {contato.texto}
+      </p>
+
+      <p className="mt-1 text-sm break-words text-zinc-500 dark:text-zinc-400">
         {lembrete ? `Lembrete: ${lembrete}` : "Sem lembrete"}
       </p>
 

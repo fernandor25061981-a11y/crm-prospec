@@ -2,15 +2,10 @@
 
 import { ArrowRightLeft, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatDataHora } from "@/lib/datetime";
 import { getInteracoes } from "@/services/leads";
 import type { Interacao, InteracaoTipo } from "@/types/database";
 import { WhatsAppIcon } from "../kanban/WhatsAppIcon";
-
-function formatDataCriacao(iso: string): string {
-  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(
-    new Date(iso)
-  );
-}
 
 function InteracaoIcon({ tipo }: { tipo: InteracaoTipo }) {
   if (tipo === "ligacao") return <Phone className="h-4 w-4" />;
@@ -75,7 +70,7 @@ export function HistoricoPanel({
             <div>
               <p className="text-zinc-700 dark:text-zinc-200">{interacao.descricao}</p>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {formatDataCriacao(interacao.data_criacao)}
+                {formatDataHora(interacao.data_criacao)}
               </p>
             </div>
           </div>
