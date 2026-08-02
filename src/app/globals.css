@@ -5,9 +5,9 @@
   --foreground: #171717;
 
   /* Linhas — 3 níveis */
-  --line: #d4d4d8; /* zinc-300, 1,48:1 — estrutura: card, coluna, modal, sidebar, nav */
-  --line-soft: #e4e4e7; /* zinc-200, 1,27:1 — divisores internos */
-  --line-strong: #a1a1aa; /* zinc-400, 2,56:1 — input, select, textarea, botão outline */
+  --line: #a1a1aa; /* zinc-400, 2,56:1 — estrutura: card, coluna, modal, sidebar, nav */
+  --line-soft: #d4d4d8; /* zinc-300, 1,48:1 — divisores internos */
+  --line-strong: #8a8a92; /* 3,42:1 — input, select, textarea, botão outline (WCAG 1.4.11) */
 
   /* Texto — 3 níveis, todos passando AA */
   --muted: #52525b; /* 7,73:1 — secundário legível */
@@ -31,9 +31,9 @@
     --background: #0a0a0a;
     --foreground: #ededed;
 
-    --line: #3f3f46; /* zinc-700, 1,90:1 */
-    --line-soft: #27272a; /* zinc-800, 1,33:1 */
-    --line-strong: #52525b; /* zinc-600, 2,56:1 */
+    --line: #52525b; /* zinc-600, 2,56:1 */
+    --line-soft: #3f3f46; /* zinc-700, 1,90:1 */
+    --line-strong: #66666e; /* 3,54:1 */
 
     --muted: #d4d4d8; /* 13,4:1 */
     --faint: #a1a1aa; /* 7,72:1 */
