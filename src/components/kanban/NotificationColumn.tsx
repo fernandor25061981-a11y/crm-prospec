@@ -22,7 +22,7 @@ export function NotificationColumn({
         <h2 className="text-center text-lg font-semibold text-red-700 dark:text-red-400">
           Fila de Notificações
         </h2>
-        <span className="min-w-7 rounded-full bg-red-100 px-2 py-0.5 text-center text-lg font-bold leading-tight tabular-nums text-red-700 dark:bg-red-900 dark:text-red-200">
+        <span className="min-w-6 rounded-full bg-red-100 px-1.5 py-0.5 text-center text-base font-bold leading-tight tabular-nums text-red-700 dark:bg-red-900 dark:text-red-200">
           {overdueLeads.length}
         </span>
       </div>
