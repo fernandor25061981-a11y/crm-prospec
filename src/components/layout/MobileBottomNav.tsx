@@ -2,29 +2,45 @@
 
 import { Calendar, FileSpreadsheet, LayoutGrid, LogOut, Plus } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FOCUS_RING } from "@/lib/ui";
 
+// "+ Lead" e "CSV" abrem modais via query string; não são destinos, então nunca
+// entram no estado ativo (por isso só os itens sem query trazem `match`).
 const NAV_LINKS = [
-  { href: "/kanban?new=1", label: "+ Lead", icon: Plus },
-  { href: "/kanban", label: "Kanban", icon: LayoutGrid },
-  { href: "/agenda", label: "Agenda", icon: Calendar },
-  { href: "/kanban?csv=1", label: "CSV", icon: FileSpreadsheet },
+  { href: "/kanban?new=1", label: "+ Lead", icon: Plus, match: null },
+  { href: "/kanban", label: "Kanban", icon: LayoutGrid, match: "/kanban" },
+  { href: "/agenda", label: "Agenda", icon: Calendar, match: "/agenda" },
+  { href: "/kanban?csv=1", label: "CSV", icon: FileSpreadsheet, match: null },
 ];
 
 // Com 5 itens o espaço por coluna aperta: px-1 e nowrap evitam o rótulo quebrar em duas linhas.
-const itemClass =
-  "flex flex-1 flex-col items-center gap-0.5 px-1 py-2 text-xs font-medium whitespace-nowrap text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/[.06]";
+const itemClass = `flex flex-1 flex-col items-center gap-0.5 px-1 py-2 text-xs font-medium whitespace-nowrap ${FOCUS_RING}`;
 
 export function MobileBottomNav({ logout }: { logout: () => void }) {
+  const pathname = usePathname();
+
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-black/[.08] bg-white md:hidden dark:border-white/[.145] dark:bg-zinc-900">
-      {NAV_LINKS.map((link) => (
-        <Link key={link.href} href={link.href} className={itemClass}>
-          <link.icon className="h-5 w-5" />
-          {link.label}
-        </Link>
-      ))}
+    <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-line bg-surface md:hidden">
+      {NAV_LINKS.map((link) => {
+        const active = link.match !== null && pathname === link.match;
+
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            aria-current={active ? "page" : undefined}
+            className={`${itemClass} ${
+              active ? "bg-accent-soft text-accent" : "text-muted hover:bg-hover"
+            }`}
+          >
+            <link.icon className="h-5 w-5" />
+            {link.label}
+          </Link>
+        );
+      })}
       <form action={logout} className="flex flex-1">
-        <button type="submit" className={itemClass}>
+        <button type="submit" className={`${itemClass} text-muted hover:bg-hover`}>
           <LogOut className="h-5 w-5" />
           Sair
         </button>

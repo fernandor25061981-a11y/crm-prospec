@@ -1,5 +1,6 @@
 "use client";
 
+import { BTN_ICON } from "@/lib/ui";
 import { getWhatsappUrl } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 
@@ -9,7 +10,7 @@ export function WhatsappButton({ whatsapp }: { whatsapp: string | null }) {
   if (!url) {
     return (
       <span
-        className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-300 dark:text-zinc-700"
+        className="flex h-10 w-10 items-center justify-center rounded-md text-disabled"
         title="Sem WhatsApp cadastrado"
       >
         <WhatsAppIcon className="h-5 w-5" />
@@ -24,7 +25,7 @@ export function WhatsappButton({ whatsapp }: { whatsapp: string | null }) {
       rel="noopener noreferrer"
       title="Abrir WhatsApp"
       onPointerDown={(e) => e.stopPropagation()}
-      className="flex h-10 w-10 items-center justify-center rounded-md text-green-600 hover:bg-black/[.04] dark:text-green-500 dark:hover:bg-white/[.06]"
+      className={`${BTN_ICON} text-green-600 dark:text-green-500`}
     >
       <WhatsAppIcon className="h-5 w-5" />
     </a>

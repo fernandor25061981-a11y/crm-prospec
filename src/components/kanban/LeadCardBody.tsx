@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AgendamentoModal } from "@/components/lead-detail/AgendamentoModal";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
 import { CONTATO_PRINCIPAL_COLORS, getContatoPrincipal, getLembreteDisplay } from "@/lib/leads";
+import { BTN_ICON, CARD, FOCUS_RING } from "@/lib/ui";
 import type { Lead, StatusKanban } from "@/types/database";
 import { CallButton } from "./CallButton";
 import { ProximoContatoLabel } from "./ProximoContatoLabel";
@@ -33,9 +34,7 @@ export function LeadCardBody({
 
   return (
     <div
-      className={`rounded-md border border-black/[.08] bg-white p-3 shadow-sm dark:border-white/[.145] dark:bg-zinc-900 ${
-        dragging ? "shadow-lg" : ""
-      }`}
+      className={`${CARD} p-3 ${dragging ? "shadow-lg" : ""}`}
     >
       <p className="mb-1.5 truncate text-base font-medium">{lead.nome}</p>
 
@@ -50,19 +49,19 @@ export function LeadCardBody({
         {contato.texto}
       </p>
 
-      <p className="mt-1 text-sm break-words text-zinc-500 dark:text-zinc-400">
+      <p className="mt-1 text-sm break-words text-faint">
         {lembrete ? `Lembrete: ${lembrete}` : "Sem lembrete"}
       </p>
 
       {!dragging && onPatch && onError && (
-        <div className="mt-2 flex items-center justify-end gap-1.5 border-t border-black/[.06] pt-2 dark:border-white/[.08]">
+        <div className="mt-2 flex items-center justify-end gap-1.5 border-t border-line-soft pt-2">
           {onChangeFase && (
             <select
               value={lead.status_kanban}
               onChange={(e) => onChangeFase(e.target.value as StatusKanban)}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => e.stopPropagation()}
-              className="mr-auto rounded-md border border-black/[.08] bg-transparent px-1.5 py-1 text-base md:hidden dark:border-white/[.145]"
+              className={`mr-auto rounded-md border border-line-strong bg-transparent px-1.5 py-1 text-base md:hidden ${FOCUS_RING}`}
             >
               {STATUS_KANBAN_ORDEM.map((status) => (
                 <option key={status} value={status}>
@@ -81,7 +80,7 @@ export function LeadCardBody({
               e.stopPropagation();
               setAgendamentoOpen(true);
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
+            className={`${BTN_ICON} text-faint`}
           >
             <CalendarClock className="h-5 w-5" />
           </button>

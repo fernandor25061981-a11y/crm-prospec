@@ -7,6 +7,7 @@ import {
   TEMPERATURA_SITE_COLORS,
   TEMPERATURA_SITE_LABELS,
 } from "@/lib/temperatura";
+import { FOCUS_RING, INPUT, LABEL } from "@/lib/ui";
 import type { TemperaturaGmn, TemperaturaSite } from "@/types/database";
 import { TemperatureSelector } from "./TemperatureSelector";
 import type { LeadFormState } from "./types";
@@ -14,9 +15,8 @@ import type { LeadFormState } from "./types";
 const TEMPERATURA_SITE_OPTIONS: TemperaturaSite[] = ["sem_site", "incompleto", "ranqueado"];
 const TEMPERATURA_GMN_OPTIONS: TemperaturaGmn[] = ["sem_perfil", "abandonado", "otimizado"];
 
-const inputClassName =
-  "w-full rounded-md border border-black/[.08] bg-transparent px-3 py-1.5 text-base dark:border-white/[.145]";
-const labelClassName = "mb-1 block text-sm text-zinc-500 dark:text-zinc-400";
+const inputClassName = `${INPUT} text-base`;
+const labelClassName = LABEL;
 
 function Field({
   label,
@@ -133,10 +133,10 @@ export function LeadFormPanel({
               rel="noopener noreferrer"
               aria-disabled={!form.website_url}
               title="Abrir website"
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${FOCUS_RING} ${
                 form.website_url
-                  ? "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/[.06]"
-                  : "pointer-events-none text-zinc-300 dark:text-zinc-700"
+                  ? "text-muted hover:bg-hover"
+                  : "pointer-events-none text-disabled"
               }`}
             >
               <Globe className="h-4 w-4" />
@@ -157,10 +157,8 @@ export function LeadFormPanel({
               rel="noopener noreferrer"
               aria-disabled={!form.maps_url}
               title="Abrir no Maps"
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
-                form.maps_url
-                  ? "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/[.06]"
-                  : "pointer-events-none text-zinc-300 dark:text-zinc-700"
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${FOCUS_RING} ${
+                form.maps_url ? "text-muted hover:bg-hover" : "pointer-events-none text-disabled"
               }`}
             >
               <MapPin className="h-4 w-4" />

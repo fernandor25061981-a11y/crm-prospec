@@ -1,4 +1,5 @@
 import { STATUS_KANBAN_LABELS } from "@/lib/kanban";
+import { FOCUS_RING } from "@/lib/ui";
 import type { Lead } from "@/types/database";
 
 function formatHorario(iso: string): string {
@@ -19,16 +20,14 @@ export function AppointmentsPanel({
   emptyMessage?: string;
 }) {
   return (
-    <div className="rounded-md border border-black/[.08] bg-white p-4 dark:border-white/[.145] dark:bg-zinc-900">
+    <div className="rounded-md border border-line bg-surface p-4">
       <div className="flex items-baseline justify-between">
         <h2 className="text-sm font-semibold">{title}</h2>
-        {subtitle && (
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">{subtitle}</span>
-        )}
+        {subtitle && <span className="text-xs text-faint">{subtitle}</span>}
       </div>
 
       {leads.length === 0 ? (
-        <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-600">{emptyMessage}</p>
+        <p className="mt-2 text-sm text-faint">{emptyMessage}</p>
       ) : (
         <ul className="mt-3 flex flex-col gap-2">
           {leads.map((lead) => {
@@ -41,21 +40,17 @@ export function AppointmentsPanel({
                 <button
                   type="button"
                   onClick={() => onOpenLead(lead)}
-                  className="flex w-full items-center justify-between gap-3 rounded-md border border-black/[.06] px-3 py-2 text-left hover:bg-black/[.04] dark:border-white/[.08] dark:hover:bg-white/[.06]"
+                  className={`flex w-full items-center justify-between gap-3 rounded-md border border-line-soft px-3 py-2 text-left hover:bg-hover ${FOCUS_RING}`}
                 >
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                    {lead.nome}
-                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium">{lead.nome}</span>
                   <span
                     className={`shrink-0 text-xs font-medium ${
-                      overdue
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-zinc-500 dark:text-zinc-400"
+                      overdue ? "text-red-600 dark:text-red-400" : "text-faint"
                     }`}
                   >
                     {lead.proximo_contato ? formatHorario(lead.proximo_contato) : "--:--"}
                   </span>
-                  <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="shrink-0 text-xs text-faint">
                     {STATUS_KANBAN_LABELS[lead.status_kanban]}
                   </span>
                 </button>

@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { dateKey, isSameDay } from "@/lib/agenda";
+import { BTN_GHOST, FOCUS_RING } from "@/lib/ui";
 import type { Lead } from "@/types/database";
 
 const WEEKDAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -46,7 +47,7 @@ export function MonthCalendar({
   const today = useMemo(() => new Date(), []);
 
   return (
-    <div className="rounded-md border border-black/[.08] bg-white p-4 dark:border-white/[.145] dark:bg-zinc-900">
+    <div className="rounded-md border border-line bg-surface p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">{monthLabel(currentMonth)}</h2>
         <div className="flex items-center gap-1">
@@ -55,7 +56,7 @@ export function MonthCalendar({
             onClick={() =>
               onMonthChange(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
             }
-            className="rounded-md p-1 hover:bg-black/[.04] dark:hover:bg-white/[.06]"
+            className={`rounded-md p-1 text-muted hover:bg-hover ${FOCUS_RING}`}
             aria-label="Mês anterior"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -63,7 +64,7 @@ export function MonthCalendar({
           <button
             type="button"
             onClick={() => onMonthChange(new Date())}
-            className="rounded-md px-2 py-1 text-xs hover:bg-black/[.04] dark:hover:bg-white/[.06]"
+            className={`${BTN_GHOST} px-2 py-1 text-xs`}
           >
             Hoje
           </button>
@@ -72,7 +73,7 @@ export function MonthCalendar({
             onClick={() =>
               onMonthChange(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))
             }
-            className="rounded-md p-1 hover:bg-black/[.04] dark:hover:bg-white/[.06]"
+            className={`rounded-md p-1 text-muted hover:bg-hover ${FOCUS_RING}`}
             aria-label="Próximo mês"
           >
             <ChevronRight className="h-4 w-4" />
@@ -80,7 +81,7 @@ export function MonthCalendar({
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs text-zinc-500 dark:text-zinc-400">
+      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs text-faint">
         {WEEKDAY_LABELS.map((label) => (
           <span key={label} className="py-1">
             {label}
@@ -105,10 +106,10 @@ export function MonthCalendar({
               key={key}
               type="button"
               onClick={() => onSelectDate(date)}
-              className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-md text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06] ${
-                inMonth ? "" : "text-zinc-300 dark:text-zinc-700"
-              } ${isToday ? "font-semibold ring-1 ring-inset ring-zinc-900 dark:ring-white" : ""} ${
-                isSelected ? "bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200" : ""
+              className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-md text-sm hover:bg-hover ${FOCUS_RING} ${
+                inMonth ? "" : "text-disabled"
+              } ${isToday ? "font-semibold ring-1 ring-inset ring-accent" : ""} ${
+                isSelected ? "bg-accent text-accent-fg hover:bg-accent-hover" : ""
               }`}
             >
               <span>{date.getDate()}</span>
@@ -116,10 +117,10 @@ export function MonthCalendar({
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${
                     isSelected
-                      ? "bg-white dark:bg-zinc-900"
+                      ? "bg-accent-fg"
                       : hasOverdue
                         ? "bg-red-600 dark:bg-red-400"
-                        : "bg-zinc-900 dark:bg-white"
+                        : "bg-foreground"
                   }`}
                 />
               )}

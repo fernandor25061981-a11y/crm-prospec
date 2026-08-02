@@ -21,7 +21,7 @@ export function NotificationQueue({
   if (overdueLeads.length === 0) return null;
 
   return (
-    <div className="border-b border-black/[.08] bg-red-50/60 px-6 py-3 dark:border-white/[.145] dark:bg-red-950/20">
+    <div className="border-b border-line bg-red-50/60 px-6 py-3 dark:bg-red-950/20">
       <div className="mb-2 flex items-center gap-2">
         <span className="text-xs font-semibold text-red-700 dark:text-red-400">
           Fila de Notificações

@@ -1,10 +1,11 @@
 import { Phone } from "lucide-react";
+import { BTN_ICON } from "@/lib/ui";
 
 export function CallButton({ telefone }: { telefone: string | null }) {
   if (!telefone) {
     return (
       <span
-        className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-300 dark:text-zinc-700"
+        className="flex h-10 w-10 items-center justify-center rounded-md text-disabled"
         title="Sem telefone cadastrado"
       >
         <Phone className="h-5 w-5" />
@@ -18,7 +19,7 @@ export function CallButton({ telefone }: { telefone: string | null }) {
       title="Ligar"
       onPointerDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
-      className="flex h-10 w-10 items-center justify-center rounded-md text-blue-600 hover:bg-black/[.04] dark:text-blue-500 dark:hover:bg-white/[.06]"
+      className={`${BTN_ICON} text-blue-600 dark:text-blue-500`}
     >
       <Phone className="h-5 w-5" />
     </a>

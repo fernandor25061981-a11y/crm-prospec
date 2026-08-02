@@ -32,13 +32,11 @@ export function ProximoContatoLabel({
   }, [proximoContato]);
 
   if (!proximoContato) {
-    return (
-      <span className="text-[18px] text-zinc-400 dark:text-zinc-500">Sem próximo compromisso</span>
-    );
+    return <span className="text-[18px] text-faint">Sem próximo compromisso</span>;
   }
 
   if (!display) {
-    return <span className="text-[18px] text-zinc-500 dark:text-zinc-400">…</span>;
+    return <span className="text-[18px] text-faint">…</span>;
   }
 
   return (
@@ -46,7 +44,7 @@ export function ProximoContatoLabel({
       className={
         display.overdue
           ? "text-[18px] font-medium text-red-600 dark:text-red-400"
-          : "text-[18px] text-zinc-500 dark:text-zinc-400"
+          : "text-[18px] text-faint"
       }
     >
       {display.text}

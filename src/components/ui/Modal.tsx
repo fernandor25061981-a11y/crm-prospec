@@ -42,7 +42,7 @@ export function Modal({
         <div
           ref={panelRef}
           tabIndex={-1}
-          className={`max-h-[90vh] w-full overflow-y-auto rounded-md border border-black/[.08] bg-white p-6 shadow-lg outline-none dark:border-white/[.145] dark:bg-zinc-900 ${widthClassName}`}
+          className={`max-h-[90vh] w-full overflow-y-auto rounded-md border border-line bg-surface p-6 shadow-lg outline-none ${widthClassName}`}
         >
           {children}
         </div>

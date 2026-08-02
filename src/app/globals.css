@@ -3,24 +3,81 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Linhas — 3 níveis */
+  --line: #d4d4d8; /* zinc-300, 1,48:1 — estrutura: card, coluna, modal, sidebar, nav */
+  --line-soft: #e4e4e7; /* zinc-200, 1,27:1 — divisores internos */
+  --line-strong: #a1a1aa; /* zinc-400, 2,56:1 — input, select, textarea, botão outline */
+
+  /* Texto — 3 níveis, todos passando AA */
+  --muted: #52525b; /* 7,73:1 — secundário legível */
+  --faint: #71717a; /* 4,83:1 — o mais claro que ainda passa AA */
+  --disabled: #a1a1aa; /* controles desabilitados (isentos de AA) */
+
+  /* Superfícies */
+  --surface: #ffffff; /* fundo de card/modal/nav */
+  --hover: #f4f4f5; /* hover neutro */
+
+  /* Destaque teal — só no chrome */
+  --accent: #0f766e; /* teal-700: bg do botão primário, texto de link ativo */
+  --accent-hover: #115e59; /* teal-800 */
+  --accent-fg: #ffffff; /* texto sobre --accent — 5,48:1 */
+  --accent-ring: #0d9488; /* teal-600: anel de foco — 3,74:1 sobre branco */
+  --accent-soft: #ccfbf1; /* teal-100: fundo de item de nav ativo */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --line: #3f3f46; /* zinc-700, 1,90:1 */
+    --line-soft: #27272a; /* zinc-800, 1,33:1 */
+    --line-strong: #52525b; /* zinc-600, 2,56:1 */
+
+    --muted: #d4d4d8; /* 13,4:1 */
+    --faint: #a1a1aa; /* 7,72:1 */
+    --disabled: #52525b;
+
+    --surface: #18181b;
+    --hover: #27272a;
+
+    --accent: #2dd4bf; /* teal-400 */
+    --accent-hover: #5eead4; /* teal-300 */
+    --accent-fg: #0a0a0a; /* 10,6:1 sobre --accent */
+    --accent-ring: #2dd4bf;
+    --accent-soft: #134e4a; /* teal-900 */
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-disabled: var(--disabled);
+
+  --color-surface: var(--surface);
+  --color-hover: var(--hover);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-ring: var(--accent-ring);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Geist vem de layout.tsx via className no <html>; o fallback cobre o carregamento. */
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

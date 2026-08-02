@@ -10,6 +10,7 @@ import {
   TEMPERATURA_SITE_COLORS,
   TEMPERATURA_SITE_LABELS,
 } from "@/lib/temperatura";
+import { FOCUS_RING } from "@/lib/ui";
 import { getWhatsappUrl } from "@/lib/whatsapp";
 import type { Lead } from "@/types/database";
 import { AgendamentoModal } from "./AgendamentoModal";
@@ -32,14 +33,14 @@ function ActionButton({
   disabled?: boolean;
 }) {
   const toneClassName = disabled
-    ? "pointer-events-none border-black/[.08] text-zinc-300 dark:border-white/[.145] dark:text-zinc-700"
+    ? "pointer-events-none border-line text-disabled"
     : tone === "accent"
-      ? "border-black/[.08] text-green-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-green-500 dark:hover:bg-white/[.06]"
+      ? "border-line-strong text-green-600 hover:bg-hover dark:text-green-500"
       : tone === "danger"
         ? "border-red-300 text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/30"
-        : "border-black/[.08] text-zinc-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-zinc-300 dark:hover:bg-white/[.06]";
+        : "border-line-strong text-muted hover:bg-hover";
 
-  const className = `flex h-10 w-full items-center justify-center rounded-md border ${toneClassName}`;
+  const className = `flex h-10 w-full items-center justify-center rounded-md border ${FOCUS_RING} ${toneClassName}`;
 
   return (
     <div>
@@ -52,9 +53,7 @@ function ActionButton({
           {icon}
         </a>
       )}
-      <span className="mt-1 block truncate text-center text-sm text-zinc-500 dark:text-zinc-400">
-        {caption}
-      </span>
+      <span className="mt-1 block truncate text-center text-sm text-faint">{caption}</span>
     </div>
   );
 }
@@ -82,13 +81,11 @@ export function LeadFichaInfo({
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold">{lead.nome}</h1>
-        <h2 className="text-base text-zinc-600 dark:text-zinc-300">
-          {lead.categoria ?? "Sem categoria"}
-        </h2>
-        <h3 className="mt-2 text-base text-zinc-500 dark:text-zinc-400">
+        <h2 className="text-base text-muted">{lead.categoria ?? "Sem categoria"}</h2>
+        <h3 className="mt-2 text-base text-faint">
           {lead.responsavel ?? "Sem responsável"} · {lead.recepcionista ?? "Sem recepcionista"}
         </h3>
-        <h3 className="text-base text-zinc-500 dark:text-zinc-400">
+        <h3 className="text-base text-faint">
           {lead.cidade ?? "Sem cidade"} · {lead.idade_negocio ?? "Sem idade do negócio"}
         </h3>
       </div>
@@ -137,18 +134,16 @@ export function LeadFichaInfo({
         />
       </div>
 
-      <div className="rounded-md border border-black/[.08] p-3 dark:border-white/[.145]">
+      <div className="rounded-md border border-line p-3">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">Próximo compromisso</span>
+          <span className="text-xs text-faint">Próximo compromisso</span>
           <ProximoContatoLabel proximoContato={lead.proximo_contato} />
         </div>
-        <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-300">
-          {lead.lembrete || "Sem lembrete"}
-        </p>
+        <p className="mb-2 text-sm text-muted">{lead.lembrete || "Sem lembrete"}</p>
         <button
           type="button"
           onClick={() => setAgendamentoOpen(true)}
-          className="flex h-9 w-full items-center justify-center gap-2 rounded-md border border-black/[.08] text-sm text-zinc-600 hover:bg-black/[.04] dark:border-white/[.145] dark:text-zinc-300 dark:hover:bg-white/[.06]"
+          className={`flex h-9 w-full items-center justify-center gap-2 rounded-md border border-line-strong text-sm text-muted hover:bg-hover ${FOCUS_RING}`}
         >
           <CalendarClock className="h-4 w-4" />
           Editar agendamento

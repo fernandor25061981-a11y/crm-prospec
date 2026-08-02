@@ -8,7 +8,7 @@ export default async function KanbanPage() {
   const leads = await getLeads();
 
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-neutral-500">Carregando quadro...</div>}>
+    <Suspense fallback={<div className="p-6 text-sm text-faint">Carregando quadro...</div>}>
       <KanbanBoard initialLeads={leads} />
     </Suspense>
   );

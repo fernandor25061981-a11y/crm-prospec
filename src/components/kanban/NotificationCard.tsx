@@ -4,6 +4,7 @@ import { CalendarClock } from "lucide-react";
 import { useState } from "react";
 import { AgendamentoModal } from "@/components/lead-detail/AgendamentoModal";
 import { CONTATO_PRINCIPAL_COLORS, getContatoPrincipal, getLembreteDisplay } from "@/lib/leads";
+import { BTN_ICON } from "@/lib/ui";
 import type { Lead } from "@/types/database";
 import { CallButton } from "./CallButton";
 import { ProximoContatoLabel } from "./ProximoContatoLabel";
@@ -43,17 +44,17 @@ export function NotificationCard({
   const contato = getContatoPrincipal(lead);
 
   return (
-    <div className="flex max-w-sm shrink-0 items-start gap-3 rounded-md border border-red-200 bg-white px-3 py-2 shadow-sm dark:border-red-900/60 dark:bg-zinc-900">
+    <div className="flex max-w-sm shrink-0 items-start gap-3 rounded-md border border-red-200 bg-surface px-3 py-2 shadow-sm dark:border-red-900/60">
       <div className="min-w-0 flex-1 cursor-pointer" onClick={() => onOpen(lead)}>
         <p className="truncate text-base font-medium">{lead.nome}</p>
         <p className={`truncate text-sm ${CONTATO_PRINCIPAL_COLORS[contato.tipo]}`}>
           {contato.texto}
         </p>
-        <p className="text-sm break-words text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm break-words text-faint">
           {lembrete ? `Lembrete: ${lembrete}` : "Sem lembrete"}
         </p>
       </div>
-      <div className="ml-auto flex shrink-0 flex-col items-end gap-1 border-l border-black/[.06] pl-2 dark:border-white/[.08]">
+      <div className="ml-auto flex shrink-0 flex-col items-end gap-1 border-l border-line-soft pl-2">
         <p className="text-sm font-medium text-red-600 dark:text-red-400">
           Atrasado {formatAtraso(lead.proximo_contato, now)}
         </p>
@@ -65,7 +66,7 @@ export function NotificationCard({
             type="button"
             title="Agendamento"
             onClick={() => setAgendamentoOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-md text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
+            className={`${BTN_ICON} text-faint`}
           >
             <CalendarClock className="h-5 w-5" />
           </button>

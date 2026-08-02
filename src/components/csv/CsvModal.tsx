@@ -14,17 +14,16 @@ import {
   nomeArquivoExport,
   type AnaliseCsv,
 } from "@/lib/leads-csv";
+import { BTN_GHOST, BTN_PRIMARY, FOCUS_RING } from "@/lib/ui";
 import { createLeads } from "@/services/leads";
 import type { Lead, StatusKanban } from "@/types/database";
 
 const ULTIMA_FASE = STATUS_KANBAN_ORDEM[STATUS_KANBAN_ORDEM.length - 1];
 const MAX_ERROS_VISIVEIS = 10;
 
-const borda = "border-black/[.08] dark:border-white/[.145]";
-const botaoPrimario =
-  "rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200";
-const botaoSecundario =
-  "rounded-md px-3 py-1.5 text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06]";
+const borda = "border-line";
+const botaoPrimario = BTN_PRIMARY;
+const botaoSecundario = BTN_GHOST;
 const celula = `border-r ${borda} px-2 py-1.5 whitespace-nowrap last:border-r-0`;
 
 export function CsvModal({
@@ -112,7 +111,7 @@ export function CsvModal({
       </div>
 
       <section className="flex flex-col gap-3">
-        <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Importar</h3>
+        <h3 className="text-sm font-medium text-faint">Importar</h3>
 
         <div className={`rounded-md border ${borda}`}>
           <div className={`flex items-center justify-between gap-2 border-b ${borda} px-3 py-2`}>
@@ -128,7 +127,7 @@ export function CsvModal({
 
           <div className="overflow-x-auto">
             <table className="w-max border-collapse text-xs">
-              <thead className="bg-black/[.03] dark:bg-white/[.05]">
+              <thead className="bg-hover">
                 <tr>
                   {CSV_CABECALHOS.map((cabecalho) => (
                     <th key={cabecalho} className={`${celula} text-left font-medium`}>
@@ -141,7 +140,7 @@ export function CsvModal({
                 </tr>
               </thead>
               <tbody>
-                <tr className="text-zinc-500 dark:text-zinc-400">
+                <tr className="text-faint">
                   {MODELO_LINHA_EXEMPLO.map((valor, indice) => (
                     <td key={CSV_CABECALHOS[indice]} className={`${celula} border-t ${borda}`}>
                       {valor}
@@ -152,7 +151,7 @@ export function CsvModal({
             </table>
           </div>
 
-          <p className={`border-t ${borda} px-3 py-2 text-xs text-zinc-500 dark:text-zinc-400`}>
+          <p className={`border-t ${borda} px-3 py-2 text-xs text-faint`}>
             <span className="text-red-600 dark:text-red-400">*</span> Só o Nome é obrigatório —
             colunas ausentes ou células vazias entram em branco. Separador{" "}
             <span className="font-mono">;</span> (padrão do Excel). Fase vazia entra como Lead novo.
@@ -166,7 +165,7 @@ export function CsvModal({
           type="file"
           accept=".csv,text/csv"
           onChange={handleArquivo}
-          className="w-full text-sm text-zinc-500 file:mr-3 file:rounded-md file:border-0 file:bg-zinc-900 file:px-3 file:py-1.5 file:text-sm file:text-white hover:file:bg-zinc-700 dark:text-zinc-400 dark:file:bg-white dark:file:text-zinc-900 dark:hover:file:bg-zinc-200"
+          className={`w-full text-sm text-faint file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent-fg hover:file:bg-accent-hover ${FOCUS_RING}`}
         />
 
         {erroArquivo && (
@@ -180,14 +179,11 @@ export function CsvModal({
             <p className="text-sm">
               <span className="font-semibold">{analise.novos.length}</span> novos ·{" "}
               {analise.duplicados} já existem · {analise.erros.length} com erro
-              <span className="text-zinc-500 dark:text-zinc-400">
-                {" "}
-                (de {analise.totalLinhas} linhas)
-              </span>
+              <span className="text-faint"> (de {analise.totalLinhas} linhas)</span>
             </p>
 
             {analise.colunasIgnoradas.length > 0 && (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-faint">
                 Colunas ignoradas: {analise.colunasIgnoradas.join(", ")}
               </p>
             )}
@@ -198,7 +194,7 @@ export function CsvModal({
                   <li key={erro}>{erro}</li>
                 ))}
                 {analise.erros.length > MAX_ERROS_VISIVEIS && (
-                  <li className="text-zinc-500 dark:text-zinc-400">
+                  <li className="text-faint">
                     e mais {analise.erros.length - MAX_ERROS_VISIVEIS}...
                   </li>
                 )}
@@ -222,13 +218,13 @@ export function CsvModal({
       </section>
 
       <section className={`mt-6 flex flex-col gap-3 border-t ${borda} pt-4`}>
-        <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Exportar</h3>
+        <h3 className="text-sm font-medium text-faint">Exportar</h3>
 
         <div className="flex items-center gap-2">
           <select
             value={fase}
             onChange={(e) => setFase(e.target.value as StatusKanban | "todas")}
-            className={`flex-1 rounded-md border ${borda} bg-transparent px-3 py-1.5 text-sm`}
+            className={`flex-1 rounded-md border border-line-strong bg-transparent px-3 py-1.5 text-sm ${FOCUS_RING}`}
           >
             {STATUS_KANBAN_ORDEM.map((status) => (
               <option key={status} value={status}>

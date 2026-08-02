@@ -1,11 +1,11 @@
 "use client";
 
 import { useActionState } from "react";
+import { BTN_PRIMARY, INPUT } from "@/lib/ui";
 import { login, type LoginState } from "./actions";
 
-const inputClassName =
-  "w-full rounded-md border border-black/[.08] bg-transparent px-3 py-1.5 text-sm dark:border-white/[.145]";
-const labelClassName = "mb-1 block text-xs text-zinc-500 dark:text-zinc-400";
+const inputClassName = INPUT;
+const labelClassName = "mb-1 block text-xs text-faint";
 
 export function LoginForm() {
   const [state, formAction, pending] = useActionState<LoginState, FormData>(login, null);
@@ -39,15 +39,9 @@ export function LoginForm() {
         />
       </div>
 
-      {state?.error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>
-      )}
+      {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-2 rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-      >
+      <button type="submit" disabled={pending} className={`mt-2 ${BTN_PRIMARY}`}>
         {pending ? "Entrando..." : "Entrar"}
       </button>
     </form>

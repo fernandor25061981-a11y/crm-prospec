@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { fromDatetimeLocalValue, toDatetimeLocalValue } from "@/lib/datetime";
+import { BTN_GHOST, BTN_PRIMARY, INPUT } from "@/lib/ui";
 import { updateAgendamento } from "@/services/leads";
 import type { Lead } from "@/types/database";
 
@@ -55,52 +56,38 @@ export function AgendamentoModal({
     <Modal open={open} onClose={onClose} widthClassName="max-w-md">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Agendamento</h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-md px-3 py-1.5 text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06]"
-        >
+        <button type="button" onClick={onClose} className={BTN_GHOST}>
           Fechar
         </button>
       </div>
 
       <div className="flex flex-col gap-4">
         <div>
-          <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">
-            Próximo compromisso
-          </label>
+          <label className="mb-1 block text-xs text-faint">Próximo compromisso</label>
           <input
             type="datetime-local"
             value={dataValue}
             onChange={(e) => setDataValue(e.target.value)}
-            className="w-full rounded-md border border-black/[.08] bg-transparent px-2 py-1.5 text-sm dark:border-white/[.145]"
+            className={INPUT}
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">Lembrete</label>
+          <label className="mb-1 block text-xs text-faint">Lembrete</label>
           <textarea
             value={lembreteValue}
             onChange={(e) => setLembreteValue(e.target.value)}
             rows={3}
             placeholder="Ex.: retornar após o cliente decidir sobre o orçamento"
-            className="w-full resize-none rounded-md border border-black/[.08] bg-transparent px-2 py-1.5 text-sm dark:border-white/[.145]"
+            className={`${INPUT} resize-none`}
           />
         </div>
 
         <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md px-3 py-1.5 text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06]"
-          >
+          <button type="button" onClick={onClose} className={BTN_GHOST}>
             Cancelar
           </button>
-          <button
-            type="button"
-            onClick={handleSave}
-            className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
+          <button type="button" onClick={handleSave} className={BTN_PRIMARY}>
             Salvar
           </button>
         </div>

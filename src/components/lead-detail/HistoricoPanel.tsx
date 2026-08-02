@@ -54,24 +54,18 @@ export function HistoricoPanel({
       <h3 className="mb-3 text-sm font-semibold">Histórico e Interações</h3>
 
       <div className="flex-1 space-y-3 overflow-y-auto">
-        {loading && (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">Carregando histórico...</p>
-        )}
+        {loading && <p className="text-xs text-faint">Carregando histórico...</p>}
         {!loading && interacoes.length === 0 && (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Nenhuma interação registrada ainda.
-          </p>
+          <p className="text-xs text-faint">Nenhuma interação registrada ainda.</p>
         )}
         {interacoes.map((interacao) => (
           <div key={interacao.id} className="flex gap-2 text-sm">
-            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black/[.04] text-zinc-600 dark:bg-white/[.06] dark:text-zinc-300">
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-hover text-muted">
               <InteracaoIcon tipo={interacao.tipo} />
             </span>
             <div>
-              <p className="text-zinc-700 dark:text-zinc-200">{interacao.descricao}</p>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {formatDataHora(interacao.data_criacao)}
-              </p>
+              <p className="text-foreground">{interacao.descricao}</p>
+              <p className="text-xs text-faint">{formatDataHora(interacao.data_criacao)}</p>
             </div>
           </div>
         ))}

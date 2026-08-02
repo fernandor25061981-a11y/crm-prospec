@@ -3,6 +3,7 @@
 import { Phone } from "lucide-react";
 import { useState } from "react";
 import { WhatsAppIcon } from "@/components/kanban/WhatsAppIcon";
+import { BTN_GHOST, BTN_PRIMARY, FOCUS_RING } from "@/lib/ui";
 import { addAnotacaoManual } from "@/services/leads";
 import type { InteracaoTipo } from "@/types/database";
 
@@ -18,27 +19,23 @@ function AnotacaoForm({
   const [descricao, setDescricao] = useState("");
 
   return (
-    <div className="mb-3 rounded-md border border-black/[.08] p-3 dark:border-white/[.145]">
+    <div className="mb-3 rounded-md border border-line p-3">
       <textarea
         autoFocus
         rows={3}
         placeholder={tipo === "ligacao" ? "Resumo da ligação..." : "Resumo do WhatsApp..."}
         value={descricao}
         onChange={(e) => setDescricao(e.target.value)}
-        className="mb-2 w-full rounded-md border border-black/[.08] bg-transparent px-2 py-1 text-sm dark:border-white/[.145]"
+        className={`mb-2 w-full rounded-md border border-line-strong bg-transparent px-2 py-1 text-sm ${FOCUS_RING}`}
       />
       <div className="flex justify-end gap-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-md px-2 py-1 text-xs hover:bg-black/[.04] dark:hover:bg-white/[.06]"
-        >
+        <button type="button" onClick={onCancel} className={`${BTN_GHOST} px-2 py-1 text-xs`}>
           Cancelar
         </button>
         <button
           type="button"
           onClick={() => onSave(descricao)}
-          className="rounded-md bg-zinc-900 px-2 py-1 text-xs text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className={`${BTN_PRIMARY} px-2 py-1 text-xs`}
         >
           Salvar
         </button>
@@ -83,14 +80,14 @@ export function RegistrarInteracaoPanel({
         <button
           type="button"
           onClick={() => setFormTipo("ligacao")}
-          className="flex items-center gap-1.5 rounded-md border border-black/[.08] px-2 py-1 text-xs hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-white/[.06]"
+          className={`flex items-center gap-1.5 rounded-md border border-line-strong px-2 py-1 text-xs text-muted hover:bg-hover ${FOCUS_RING}`}
         >
           <Phone className="h-3.5 w-3.5" /> Registrar Ligação
         </button>
         <button
           type="button"
           onClick={() => setFormTipo("whatsapp")}
-          className="flex items-center gap-1.5 rounded-md border border-black/[.08] px-2 py-1 text-xs hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-white/[.06]"
+          className={`flex items-center gap-1.5 rounded-md border border-line-strong px-2 py-1 text-xs text-muted hover:bg-hover ${FOCUS_RING}`}
         >
           <WhatsAppIcon className="h-3.5 w-3.5" /> Registrar WhatsApp
         </button>

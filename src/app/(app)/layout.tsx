@@ -1,19 +1,15 @@
 import Link from "next/link";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { SidebarNav } from "@/components/layout/SidebarNav";
+import { BTN_PRIMARY, FOCUS_RING } from "@/lib/ui";
 import { logout } from "../login/actions";
 
-const NAV_LINKS = [
-  { href: "/kanban", label: "Kanban" },
-  { href: "/agenda", label: "Agenda" },
-];
-
-const navButtonClass =
-  "rounded-md bg-zinc-900 px-2 py-1.5 text-center text-sm text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200";
+const navButtonClass = `${BTN_PRIMARY} px-2 text-center`;
 
 export default function AppLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="min-h-full flex">
-      <aside className="hidden w-32 shrink-0 border-r border-black/[.08] dark:border-white/[.145] md:flex flex-col gap-1 p-2">
+      <aside className="hidden w-32 shrink-0 border-r border-line md:flex flex-col gap-1 p-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/preguica.gif" alt="" className="w-full rounded-md" />
         <Link href="/kanban?new=1" className={navButtonClass}>
@@ -22,17 +18,11 @@ export default function AppLayout({ children }: Readonly<{ children: React.React
         <Link href="/kanban?csv=1" className={navButtonClass}>
           CSV
         </Link>
-        <nav className="mt-1 flex flex-1 flex-col gap-1">
-          {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className={navButtonClass}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <SidebarNav />
         <form action={logout}>
           <button
             type="submit"
-            className="w-full rounded-md px-2 py-2 text-left text-sm font-medium text-zinc-500 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.06]"
+            className={`w-full rounded-md px-2 py-2 text-left text-sm font-medium text-faint hover:bg-hover ${FOCUS_RING}`}
           >
             Sair
           </button>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { fromDatetimeLocalValue, toDatetimeLocalValue } from "@/lib/datetime";
+import { BTN_GHOST, BTN_PRIMARY } from "@/lib/ui";
 import { createLead, updateLead } from "@/services/leads";
 import type { Lead, LeadInsert, LeadUpdate } from "@/types/database";
 import { LeadFormPanel } from "./LeadFormPanel";
@@ -127,19 +128,11 @@ export function LeadFormModal({
 
         <LeadFormPanel form={form} onChange={handleChange} />
 
-        <div className="mt-6 flex justify-end gap-2 border-t border-black/[.08] pt-4 dark:border-white/[.145]">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-md px-3 py-1.5 text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06]"
-          >
+        <div className="mt-6 flex justify-end gap-2 border-t border-line pt-4">
+          <button type="button" onClick={onCancel} className={BTN_GHOST}>
             Cancelar
           </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
+          <button type="submit" disabled={saving} className={BTN_PRIMARY}>
             {saving ? "Salvando..." : "Salvar"}
           </button>
         </div>

@@ -1,3 +1,5 @@
+import { FOCUS_RING } from "@/lib/ui";
+
 export function StatusBar<T extends string>({
   label,
   value,
@@ -14,9 +16,7 @@ export function StatusBar<T extends string>({
   const content = (
     <>
       <span className={`block h-2.5 w-full rounded-full ${colors[value]}`} />
-      <span className="mt-1 block text-center text-sm text-zinc-500 dark:text-zinc-400">
-        {label}
-      </span>
+      <span className="mt-1 block text-center text-sm text-faint">{label}</span>
     </>
   );
 
@@ -34,7 +34,7 @@ export function StatusBar<T extends string>({
       target="_blank"
       rel="noopener noreferrer"
       title={labels[value]}
-      className="block rounded-md transition-opacity hover:opacity-80"
+      className={`block rounded-md transition-opacity hover:opacity-80 ${FOCUS_RING}`}
     >
       {content}
     </a>
