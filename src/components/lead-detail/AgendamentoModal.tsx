@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { fromDatetimeLocalValue, toDatetimeLocalValue } from "@/lib/datetime";
 import { BTN_GHOST, BTN_PRIMARY, INPUT } from "@/lib/ui";
@@ -24,6 +24,7 @@ export function AgendamentoModal({
   onPatch: (patch: Partial<Lead>) => void;
   onError: (message: string) => void;
 }) {
+  const dataInputRef = useRef<HTMLInputElement>(null);
   const [dataValue, setDataValue] = useState(() => toDatetimeLocalValue(proximoContato));
   const [lembreteValue, setLembreteValue] = useState(lembrete ?? "");
   const [wasOpen, setWasOpen] = useState(open);
@@ -64,12 +65,18 @@ export function AgendamentoModal({
       <div className="flex flex-col gap-4">
         <div>
           <label className="mb-1 block text-xs text-faint">Próximo compromisso</label>
-          <input
-            type="datetime-local"
-            value={dataValue}
-            onChange={(e) => setDataValue(e.target.value)}
-            className={INPUT}
-          />
+          <div
+            onClick={() => dataInputRef.current?.showPicker?.()}
+            className={`${INPUT} cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent-ring`}
+          >
+            <input
+              ref={dataInputRef}
+              type="datetime-local"
+              value={dataValue}
+              onChange={(e) => setDataValue(e.target.value)}
+              className="w-full cursor-pointer bg-transparent outline-none"
+            />
+          </div>
         </div>
 
         <div>

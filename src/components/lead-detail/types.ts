@@ -13,5 +13,4 @@ export type LeadFormState = {
   website_url: string;
   temperatura_site: TemperaturaSite;
   temperatura_gmn: TemperaturaGmn;
-  proximo_contato: string;
 };

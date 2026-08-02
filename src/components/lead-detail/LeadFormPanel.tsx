@@ -8,6 +8,7 @@ import {
   TEMPERATURA_SITE_LABELS,
 } from "@/lib/temperatura";
 import { FOCUS_RING, INPUT, LABEL } from "@/lib/ui";
+import { normalizarUrl } from "@/lib/url";
 import type { TemperaturaGmn, TemperaturaSite } from "@/types/database";
 import { TemperatureSelector } from "./TemperatureSelector";
 import type { LeadFormState } from "./types";
@@ -122,13 +123,13 @@ export function LeadFormPanel({
         <Field label="URL do Website">
           <div className="flex gap-2">
             <input
-              type="url"
+              type="text"
               value={form.website_url}
               onChange={(e) => onChange({ website_url: e.target.value })}
               className={inputClassName}
             />
             <a
-              href={form.website_url || undefined}
+              href={form.website_url ? normalizarUrl(form.website_url) : undefined}
               target="_blank"
               rel="noopener noreferrer"
               aria-disabled={!form.website_url}
@@ -146,13 +147,13 @@ export function LeadFormPanel({
         <Field label="URL do Maps">
           <div className="flex gap-2">
             <input
-              type="url"
+              type="text"
               value={form.maps_url}
               onChange={(e) => onChange({ maps_url: e.target.value })}
               className={inputClassName}
             />
             <a
-              href={form.maps_url || undefined}
+              href={form.maps_url ? normalizarUrl(form.maps_url) : undefined}
               target="_blank"
               rel="noopener noreferrer"
               aria-disabled={!form.maps_url}
@@ -185,15 +186,6 @@ export function LeadFormPanel({
           onChange={(temperatura_gmn) => onChange({ temperatura_gmn })}
         />
       </div>
-
-      <Field label="Próximo Compromisso">
-        <input
-          type="datetime-local"
-          value={form.proximo_contato}
-          onChange={(e) => onChange({ proximo_contato: e.target.value })}
-          className={inputClassName}
-        />
-      </Field>
     </div>
   );
 }

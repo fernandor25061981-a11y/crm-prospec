@@ -1,15 +1,15 @@
 import type { TemperaturaGmn, TemperaturaSite } from "@/types/database";
 
 export const TEMPERATURA_SITE_LABELS: Record<TemperaturaSite, string> = {
-  sem_site: "Site: sem site",
-  incompleto: "Site: incompleto",
-  ranqueado: "Site: ranqueado",
+  sem_site: "Sem site",
+  incompleto: "Incompleto",
+  ranqueado: "Ranqueado",
 };
 
 export const TEMPERATURA_GMN_LABELS: Record<TemperaturaGmn, string> = {
-  sem_perfil: "GMN: sem perfil",
-  abandonado: "GMN: abandonado",
-  otimizado: "GMN: otimizado",
+  sem_perfil: "Sem perfil",
+  abandonado: "Abandonado",
+  otimizado: "Otimizado",
 };
 
 export const TEMPERATURA_SITE_COLORS: Record<TemperaturaSite, string> = {

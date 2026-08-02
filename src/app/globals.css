@@ -100,3 +100,28 @@ body {
   /* Geist vem de layout.tsx via className no <html>; o fallback cobre o carregamento. */
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Barra de rolagem no tema do app (ex.: colunas do Kanban), em vez da barra
+   nativa do SO. Usa os tokens de --line, então já troca sozinha no dark mode. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-soft) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--line-soft);
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--line);
+}

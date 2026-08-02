@@ -13,7 +13,7 @@ export default function AppLayout({ children }: Readonly<{ children: React.React
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/preguica.gif" alt="" className="w-full rounded-md" />
         <Link href="/kanban?new=1" className={navButtonClass}>
-          + Lead
+          Novo
         </Link>
         <Link href="/kanban?busca=1" className={navButtonClass}>
           Buscar
