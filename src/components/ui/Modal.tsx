@@ -14,12 +14,20 @@ export function Modal({
   widthClassName?: string;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  // onClose vem como arrow inline dos chamadores, então muda de identidade a cada
+  // render do pai. Fora da ref, ele viraria dependência do efeito e o focus() abaixo
+  // roubaria o cursor de quem estivesse digitando dentro do modal.
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
   useEffect(() => {
     if (!open) return;
 
     function handleKeydown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") onCloseRef.current();
     }
 
     document.addEventListener("keydown", handleKeydown);
@@ -31,7 +39,7 @@ export function Modal({
       document.removeEventListener("keydown", handleKeydown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 
