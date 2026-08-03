@@ -15,7 +15,6 @@ import { BuscaModal } from "@/components/busca/BuscaModal";
 import { CsvModal } from "@/components/csv/CsvModal";
 import { LeadFichaModal } from "@/components/lead-detail/LeadFichaModal";
 import { LeadFormModal } from "@/components/lead-detail/LeadFormModal";
-import { useOverdueLeads } from "@/hooks/useOverdueLeads";
 import { STATUS_KANBAN_LABELS, STATUS_KANBAN_ORDEM } from "@/lib/kanban";
 import { deleteLead, getUltimasInteracoesRegistradas, updateLeadFase } from "@/services/leads";
 import type { Lead, StatusKanban } from "@/types/database";
@@ -79,7 +78,6 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
   // Quantidade de sensores precisa ser constante: o dnd-kit usa sensors.map() como deps de efeito.
   // O drag no mobile continua desativado porque LeadCard não anexa os listeners nesse caso.
   const sensors = useSensors(pointerSensor);
-  const { overdueLeads, now } = useOverdueLeads(leads);
 
   const leadIdsKey = useMemo(() => leads.map((l) => l.id).join(","), [leads]);
 
@@ -200,16 +198,17 @@ export function KanbanBoard({ initialLeads }: { initialLeads: Lead[] }) {
               largura da viewport, as colunas transbordam a caixa dela e o padding-right
               volta a ficar de fora da área rolável. Vale nos dois breakpoints. */}
           <div className="flex h-full gap-4 p-6 min-w-max">
-            {overdueLeads.length > 0 && (
-              <NotificationColumn
-                overdueLeads={overdueLeads}
-                now={now}
-                ultimasInteracoes={ultimasInteracoes}
-                onPatch={patchLead}
-                onError={setErrorMessage}
-                onOpen={openFicha}
-              />
-            )}
+            {/* Renderiza sempre: a coluna some sozinha (retorna null) quando não há
+                atrasado. É ela que hospeda o relógio de 20s — subir esse estado para
+                cá faria o quadro inteiro, e a ficha aberta junto, repintar a cada tique. */}
+            <NotificationColumn
+              leads={leads}
+              ultimasInteracoes={ultimasInteracoes}
+              onPatch={patchLead}
+              onError={setErrorMessage}
+              onOpen={openFicha}
+            />
+
             {STATUS_KANBAN_ORDEM.map((status) => (
               <KanbanColumn
                 key={status}

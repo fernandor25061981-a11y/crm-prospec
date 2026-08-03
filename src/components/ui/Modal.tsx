@@ -33,7 +33,12 @@ export function Modal({
     document.addEventListener("keydown", handleKeydown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    panelRef.current?.focus();
+
+    // Só puxa o foco se nada aqui dentro já estiver focado: campos com autoFocus
+    // (o textarea de RegistrarInteracaoPanel) são focados na fase de commit, antes
+    // deste efeito, e sem a guarda o painel roubaria o cursor logo em seguida.
+    const panel = panelRef.current;
+    if (panel && !panel.contains(document.activeElement)) panel.focus();
 
     return () => {
       document.removeEventListener("keydown", handleKeydown);
