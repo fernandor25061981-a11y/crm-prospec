@@ -27,12 +27,15 @@ export function LeadCard({
 
   const dragProps = isMobile ? {} : { ...listeners, ...attributes };
 
+  // No mobile o dragProps fica vazio, então nada precisa competir com o gesto:
+  // touch-auto deixa o pan vertical rolar a coluna e o horizontal rolar o quadro.
+  // Um pan-y aqui bloqueava a troca de coluna a cada toque iniciado sobre o card.
   return (
     <div
       ref={setNodeRef}
       {...dragProps}
       onClick={() => onOpen(lead)}
-      className={`cursor-pointer ${isMobile ? "touch-pan-y" : "touch-none"} ${isDragging ? "opacity-30" : ""}`}
+      className={`cursor-pointer ${isMobile ? "touch-auto" : "touch-none"} ${isDragging ? "opacity-30" : ""}`}
     >
       <LeadCardBody
         lead={lead}
