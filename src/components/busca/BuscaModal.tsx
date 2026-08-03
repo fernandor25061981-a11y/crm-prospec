@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@/components/ui/Modal";
-import { buscarLeads, LIMITE_RESULTADOS } from "@/lib/busca";
+import { buscarLeads, categoriasDisponiveis, LIMITE_RESULTADOS, SEM_CATEGORIA } from "@/lib/busca";
 import { STATUS_KANBAN_LABELS } from "@/lib/kanban";
 import { CONTATO_PRINCIPAL_COLORS, getContatoPrincipal } from "@/lib/leads";
 import { BTN_GHOST, FOCUS_RING, INPUT } from "@/lib/ui";
@@ -21,12 +21,17 @@ export function BuscaModal({
   onSelect: (lead: Lead) => void;
 }) {
   const [termo, setTermo] = useState("");
+  // "" = todas as categorias.
+  const [categoria, setCategoria] = useState("");
   const [wasOpen, setWasOpen] = useState(open);
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (open !== wasOpen) {
     setWasOpen(open);
-    if (open) setTermo("");
+    if (open) {
+      setTermo("");
+      setCategoria("");
+    }
   }
 
   // O Modal dá foco no painel ao abrir; como ele é filho daqui, o efeito dele
@@ -35,8 +40,13 @@ export function BuscaModal({
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const resultados = useMemo(() => buscarLeads(leads, termo), [leads, termo]);
-  const buscou = termo.trim().length > 0;
+  const resultados = useMemo(
+    () => buscarLeads(leads, termo, categoria),
+    [leads, termo, categoria]
+  );
+  const categorias = useMemo(() => categoriasDisponiveis(leads), [leads]);
+  const temSemCategoria = useMemo(() => leads.some((lead) => !lead.categoria), [leads]);
+  const filtrou = termo.trim().length > 0 || categoria !== "";
 
   return (
     <Modal open={open} onClose={onClose} widthClassName="max-w-xl">
@@ -67,16 +77,34 @@ export function BuscaModal({
             className={`${INPUT} pl-9`}
           />
         </div>
+
+        {/* Só aparece se houver categoria nos dados — sem isso o controle seria inútil. */}
+        {categorias.length > 0 && (
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            aria-label="Filtrar por categoria"
+            className={`${INPUT} mt-2`}
+          >
+            <option value="">Todas as categorias</option>
+            {categorias.map((nome) => (
+              <option key={nome} value={nome}>
+                {nome}
+              </option>
+            ))}
+            {temSemCategoria && <option value={SEM_CATEGORIA}>Sem categoria</option>}
+          </select>
+        )}
       </form>
 
       <div className="mt-4 max-h-[50vh] overflow-y-auto">
-        {!buscou && (
+        {!filtrou && (
           <p className="py-6 text-center text-sm text-faint">
-            Digite para procurar entre {leads.length} clientes.
+            Digite ou escolha uma categoria para procurar entre {leads.length} clientes.
           </p>
         )}
 
-        {buscou && resultados.length === 0 && (
+        {filtrou && resultados.length === 0 && (
           <p className="py-6 text-center text-sm text-faint">Nenhum cliente encontrado.</p>
         )}
 
